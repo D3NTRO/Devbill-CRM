@@ -13,9 +13,11 @@
 | Client + Tag | ✅ | Denis | + signals ActivityLog |
 | ActivityLog + signals | ✅ | Denis | automático en created/stage change |
 | Project + PipelineStage | ✅ | Denis | 6 stages + signals |
-| Pipeline Kanban (frontend) | ⏳ Pendiente | — | |
+| Pipeline Kanban (frontend) | ✅ | Denis | @dnd-kit drag & drop |
 | Task + reminders Celery | ⏳ Pendiente | — | |
 | ClientDetail (perfil unificado) | ✅ | Denis | + feed actividad |
+| TimeEntry + timer | ✅ | Denis | start/stop/running endpoints |
+| TimerWidget global (Zustand) | ✅ | Denis | en TopBar siempre visible |
 | TimeEntry + timer | ⏳ Pendiente | — | Feature estrella |
 | TimerWidget global (Zustand) | ⏳ Pendiente | — | |
 | Proposal + PDF WeasyPrint | ⏳ Pendiente | — | |
@@ -38,11 +40,11 @@
 > Claude Code actualiza esta sección al final de cada sesión.
 
 ```
-SESIÓN 3 — ARRANCAR CON:
-1. Pipeline Kanban con @dnd-kit (frontend)
-2. TimeEntry start/stop/running endpoints
-3. TimerWidget en Zustand (TopBar)
-4. Serializers para TimeEntry
+SESIÓN 4 — ARRANCAR CON:
+1. Proposal model + WeasyPrint PDF
+2. Invoice model + PDF
+3. Búsqueda global /search/
+4. Dashboard analytics endpoints
 5. Commit y push
 ```
 
@@ -138,6 +140,45 @@ SESIÓN 3 — ARRANCAR CON:
 - Pipeline Kanban con @dnd-kit
 - TimeEntry start/stop endpoints
 - TimerWidget Zustand + TopBar
+
+---
+
+**Fecha:** 2026-04-19 06:00
+**Dev:** Denis
+**Sesión #:** 3
+**Duración:** 0.5h
+
+#### ✅ Completado en esta sesión
+- Pipeline Kanban con @dnd-kit (6 columnas: LEAD → PROPOSAL → NEGOTIATION → ACTIVE → COMPLETED → BILLED)
+- PipelineColumn + ProjectCard componentes con drag & drop
+- TimeEntry model con freelancer FK
+- TimeEntrySerializer con project_name, client_name
+- TimeEntryViewSet con endpoints: /start/, /stop/, /running/
+- Backend valida que no haya otro timer activo
+- timerStore Zustand con startTimer, stopTimer, fetchRunning, startInterval
+- TimerWidget en TopBar con selector de proyecto + descripción
+- Timer persiste entre navegaciones y se restaura al cargar
+
+#### 🔄 Quedó a medias
+- Ninguno (Sprint 3 completo)
+
+#### 🐛 Bugs encontrados
+- Ninguno
+
+#### 📝 Decisiones técnicas tomadas
+- Solo 1 timer activo a la vez (validación backend)
+- Interval se limpia al desmontar o detener timer
+- Zustand persist para guardar estado del timer
+
+#### ⚠️ Deuda técnica anotada
+- Falta Proposal + Invoice models
+- Falta búsqueda global
+
+#### ➡️ PRÓXIMO PASO exacto para la siguiente sesión
+- Proposal model + PDF WeasyPrint
+- Invoice model + PDF
+- Búsqueda global /search/
+- Dashboard analytics
 
 ---
 
