@@ -8,8 +8,8 @@
 
 | Módulo | Estado | Dev | Notas |
 |--------|--------|-----|-------|
-| Repo + Docker setup | ⏳ Pendiente | — | Primer paso absoluto |
-| Auth + FreelancerProfile | ⏳ Pendiente | — | |
+| Repo + Docker setup | ✅ | Denis | |
+| Auth + FreelancerProfile | ✅ | Denis | JWT completo |
 | Client + Tag | ⏳ Pendiente | — | |
 | ActivityLog + signals | ⏳ Pendiente | — | |
 | Project + PipelineStage | ⏳ Pendiente | — | |
@@ -38,14 +38,14 @@
 > Claude Code actualiza esta sección al final de cada sesión.
 
 ```
-SESIÓN 1 — ARRANCAR CON:
-1. Crear repo en GitHub: devbill (o devbill-crm)
-2. Clonar y crear estructura base de carpetas
-3. docker-compose.yml con Django + PostgreSQL + Redis
-4. Crear apps Django: users, clients, projects, tasks,
-   time_entries, proposals, invoices, auto_rules, dashboard, search
-5. User model + FreelancerProfile + JWT auth completo
-6. Primer commit y push
+SESIÓN 2 — ARRANCAR CON:
+1. Client model (UUID, name, email, company, tags M2M)
+2. Tag model (name, color, freelancer FK)
+3. ActivityLog model + Django signals automáticos
+4. Project model (pipeline_stage, column_order, lead_source)
+5. Client CRUD endpoints + serializers
+6. Frontend: Clients page + ClientDetail
+7. Commit y push
 ```
 
 ---
@@ -61,6 +61,48 @@ SESIÓN 1 — ARRANCAR CON:
 ## 📅 Historial de sesiones
 
 > Claude Code añade una entrada al FINAL de cada sesión. Nunca borrar entradas anteriores.
+
+---
+**Fecha:** 2026-04-19 05:30
+**Dev:** Denis
+**Sesión #:** 1
+**Duración:** 0.5h
+
+#### ✅ Completado en esta sesión
+- Crear repo GitHub: https://github.com/D3NTRO/Devbill-CRM
+- Estructura de carpetas completa según CLAUDE.md
+- docker-compose.yml con Django + PostgreSQL + Redis + Celery + Frontend
+- Django config (base/dev/prod settings)
+- 10 apps Django creadas (users, clients, projects, tasks, time_entries, proposals, invoices, auto_rules, dashboard, search)
+- User model personalizado + FreelancerProfile
+- Auth JWT completo (register, login, refresh, me endpoints)
+- Frontend React 18 + Vite + TailwindCSS
+- Pages: Login, Register, Dashboard básicos
+- Zustand authStore con persistencia
+- Primer commit: "chore(init): project structure - Django + React + Docker + JWT auth"
+
+#### 🔄 Quedó a medias
+- Ninguno (Sprint 1 completo)
+
+#### 🐛 Bugs encontrados
+- Ninguno
+
+#### 📝 Decisiones técnicas tomadas
+- Usar PostgreSQL en lugar de SQLite para producción real
+- JWT con access + refresh tokens
+- Zustand para estado global del frontend
+
+#### ⚠️ Deuda técnica anotada
+- Falta crear modelos de Client, Project, Task, etc.
+- Frontend básico, sin páginas de verdad aún
+
+#### ➡️ PRÓXIMO PASO exacto para la siguiente sesión
+- Crear Client model + Tag model + ActivityLog
+- Crear Project model con pipeline_stage
+- Crear serializers y viewsets
+- Frontend: Clients page
+
+---
 
 ### [TEMPLATE — Claude Code copia y llena este bloque]
 ```
@@ -168,7 +210,7 @@ python manage.py seed_demo
 
 | Recurso | URL |
 |---------|-----|
-| Repo GitHub | [por crear] |
+| Repo GitHub | https://github.com/D3NTRO/Devbill-CRM |
 | Demo pública | [por deployar] |
 | Railway project | [por crear] |
 | Swagger/OpenAPI | /api/docs/ (local) |
