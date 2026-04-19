@@ -1,12 +1,18 @@
 import uuid
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class TimeEntry(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project = models.ForeignKey(
         'projects.Project',
+        on_delete=models.CASCADE,
+        related_name='time_entries'
+    )
+    freelancer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='time_entries'
     )
@@ -25,7 +31,6 @@ class TimeEntry(models.Model):
         return f"{self.project.name} - {self.started_at}"
 
     def stop(self):
-        from django.utils import timezone
         self.ended_at = timezone.now()
         if self.started_at:
             duration = self.ended_at - self.started_at

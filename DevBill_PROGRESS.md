@@ -10,12 +10,12 @@
 |--------|--------|-----|-------|
 | Repo + Docker setup | ✅ | Denis | |
 | Auth + FreelancerProfile | ✅ | Denis | JWT completo |
-| Client + Tag | ⏳ Pendiente | — | |
-| ActivityLog + signals | ⏳ Pendiente | — | |
-| Project + PipelineStage | ⏳ Pendiente | — | |
+| Client + Tag | ✅ | Denis | + signals ActivityLog |
+| ActivityLog + signals | ✅ | Denis | automático en created/stage change |
+| Project + PipelineStage | ✅ | Denis | 6 stages + signals |
 | Pipeline Kanban (frontend) | ⏳ Pendiente | — | |
 | Task + reminders Celery | ⏳ Pendiente | — | |
-| ClientDetail (perfil unificado) | ⏳ Pendiente | — | |
+| ClientDetail (perfil unificado) | ✅ | Denis | + feed actividad |
 | TimeEntry + timer | ⏳ Pendiente | — | Feature estrella |
 | TimerWidget global (Zustand) | ⏳ Pendiente | — | |
 | Proposal + PDF WeasyPrint | ⏳ Pendiente | — | |
@@ -38,14 +38,12 @@
 > Claude Code actualiza esta sección al final de cada sesión.
 
 ```
-SESIÓN 2 — ARRANCAR CON:
-1. Client model (UUID, name, email, company, tags M2M)
-2. Tag model (name, color, freelancer FK)
-3. ActivityLog model + Django signals automáticos
-4. Project model (pipeline_stage, column_order, lead_source)
-5. Client CRUD endpoints + serializers
-6. Frontend: Clients page + ClientDetail
-7. Commit y push
+SESIÓN 3 — ARRANCAR CON:
+1. Pipeline Kanban con @dnd-kit (frontend)
+2. TimeEntry start/stop/running endpoints
+3. TimerWidget en Zustand (TopBar)
+4. Serializers para TimeEntry
+5. Commit y push
 ```
 
 ---
@@ -101,6 +99,45 @@ SESIÓN 2 — ARRANCAR CON:
 - Crear Project model con pipeline_stage
 - Crear serializers y viewsets
 - Frontend: Clients page
+
+---
+
+**Fecha:** 2026-04-19 05:45
+**Dev:** Denis
+**Sesión #:** 2
+**Duración:** 0.5h
+
+#### ✅ Completado en esta sesión
+- Client model (UUID, name, email, company, tags M2M, currency, tax_id, notes)
+- Tag model (name, color, freelancer FK)
+- ActivityLog model con signals automáticos (CLIENT_CREATED, STAGE_CHANGED)
+- Project model con pipeline_stage (LEAD → PROPOSAL → NEGOTIATION → ACTIVE → COMPLETED → BILLED)
+- ClientViewSet + TagViewSet con todos los endpoints
+- ProjectViewSet + PipelineViewSet con move/reorder
+- Frontend: Clients page (lista + modal crear), ClientDetail (resumen + actividad + proyectos)
+- API client.js con interceptors para JWT
+- Task + TimeEntry modelos creados
+
+#### 🔄 Quedó a medias
+- Pipeline Kanban frontend (no implementado aún)
+- Timer start/stop endpoints
+
+#### 🐛 Bugs encontrados
+- Ninguno
+
+#### 📝 Decisiones técnicas tomadas
+- ActivityLog via Django signals, nunca en views
+- UUIDs como primary keys en todos los modelos de negocio
+- Signals en apps.py con ready()
+
+#### ⚠️ Deuda técnica anotada
+- Falta serializers de TimeEntry
+- Falta TimerWidget en frontend
+
+#### ➡️ PRÓXIMO PASO exacto para la siguiente sesión
+- Pipeline Kanban con @dnd-kit
+- TimeEntry start/stop endpoints
+- TimerWidget Zustand + TopBar
 
 ---
 

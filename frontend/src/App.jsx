@@ -1,11 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
+import { useEffect } from 'react'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Clients from './pages/Clients'
 import ClientDetail from './pages/ClientDetail'
+import Pipeline from './pages/Pipeline'
+import TimerWidget from './components/timer/TimerWidget'
 import { useAuthStore } from './store/authStore'
+import { useTimerStore } from './store/timerStore'
+import { projectsApi } from './api/projects'
+import { useState } from 'react'
 
 function ProtectedRoute({ children }) {
   const { token } = useAuthStore()
@@ -15,6 +21,15 @@ function ProtectedRoute({ children }) {
 
 function AppLayout({ children }) {
   const { user, logout } = useAuthStore()
+  const { fetchRunning } = useTimerStore()
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    fetchRunning()
+    projectsApi.getAll().then(res => {
+      setProjects(res.data.results || res.data)
+    }).catch(() => {})
+  }, [])
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -22,6 +37,7 @@ function AppLayout({ children }) {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-indigo-600">DevBill</h1>
           <div className="flex items-center gap-4">
+            <TimerWidget projects={projects} />
             <span className="text-gray-600">Hola, {user?.first_name || 'Usuario'}</span>
             <button
               onClick={logout}
@@ -40,6 +56,9 @@ function AppLayout({ children }) {
             </a>
             <a href="/clients" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
               Clientes
+            </a>
+            <a href="/pipeline" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
+              Pipeline
             </a>
             <a href="/projects" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
               Proyectos
@@ -94,6 +113,13 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <ClientDetail />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/pipeline" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Pipeline />
             </AppLayout>
           </ProtectedRoute>
         } />
