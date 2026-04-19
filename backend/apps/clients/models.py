@@ -12,7 +12,7 @@ class Tag(models.Model):
         on_delete=models.CASCADE,
         related_name='tags'
     )
-    created_at = models.AutoCreatedField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ['name', 'freelancer']
@@ -38,8 +38,8 @@ class Client(models.Model):
     notes = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     tags = models.ManyToManyField(Tag, blank=True, related_name='clients')
-    created_at = models.AutoCreatedField()
-    updated_at = models.AutoNowField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
@@ -67,7 +67,7 @@ class ActivityLog(models.Model):
     event_type = models.CharField(max_length=30, choices=EVENT_TYPES)
     description = models.CharField(max_length=300)
     metadata = models.JSONField(default=dict, blank=True)
-    created_at = models.AutoCreatedField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-created_at']

@@ -49,8 +49,8 @@ class Task(models.Model):
         default=Priority.MEDIUM
     )
     reminder_sent = models.BooleanField(default=False)
-    created_at = models.AutoCreatedField()
-    updated_at = models.AutoNowField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']

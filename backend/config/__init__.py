@@ -1,5 +1,4 @@
-from .base import *
-from .dev import *
+from config.settings.dev import *
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']

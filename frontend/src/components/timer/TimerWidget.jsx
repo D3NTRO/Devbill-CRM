@@ -1,5 +1,5 @@
 import { Play, Square, Clock } from 'lucide-react'
-import { useTimerStore } from '../store/timerStore'
+import { useTimerStore } from '../../store/timerStore'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 

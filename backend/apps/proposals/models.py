@@ -29,8 +29,8 @@ class Proposal(models.Model):
         default=ProposalStatus.DRAFT
     )
     notes = models.TextField(blank=True)
-    created_at = models.AutoCreatedField()
-    updated_at = models.AutoNowField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']

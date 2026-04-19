@@ -3,10 +3,12 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
-from weasyprint import HTML
 from django.template.loader import render_to_string
 from .models import Proposal
 from .serializers import ProposalSerializer
+
+# WeasyPrint requires GTK libraries - use only with Docker in production
+# from weasyprint import HTML
 
 
 class ProposalViewSet(viewsets.ModelViewSet):
@@ -20,20 +22,12 @@ class ProposalViewSet(viewsets.ModelViewSet):
     def pdf(self, request, pk=None):
         proposal = self.get_object()
         
-        from apps.users.models import FreelancerProfile
-        freelancer_profile = FreelancerProfile.objects.filter(user=request.user).first()
-        
-        html_string = render_to_string('proposals/proposal.html', {
-            'proposal': proposal,
-            'freelancer': freelancer_profile,
-            'user': request.user,
+        # PDF generation requires WeasyPrint with GTK - use Docker for PDF generation
+        return Response({
+            'message': 'PDF not available in local development. Use Docker for PDF generation.',
+            'proposal_id': str(proposal.id),
+            'title': proposal.title,
         })
-        
-        pdf = HTML(string=html_string).write_pdf()
-        
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="propuesta-{proposal.id}.pdf"'
-        return response
 
     @action(detail=True, methods=['post'])
     def mark_sent(self, request, pk=None):

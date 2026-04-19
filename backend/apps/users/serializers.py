@@ -24,21 +24,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
-    password_confirm = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'password_confirm', 'first_name', 'last_name']
-
-    def validate(self, data):
-        if data['password'] != data['password_confirm']:
-            raise serializers.ValidationError({'password_confirm': 'Las contraseñas no coinciden'})
-        return data
+        fields = ['email', 'password', 'first_name', 'last_name']
 
     def create(self, validated_data):
-        validated_data.pop('password_confirm')
         password = validated_data.pop('password')
-        user = User.objects.create_user(password=password, **validated_data)
+        username = validated_data.get('email', '')
+        user = User.objects.create_user(username=username, password=password, **validated_data)
         FreelancerProfile.objects.create(user=user)
         return user
 

@@ -5,10 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from django.utils import timezone
 from django.db import models
-from weasyprint import HTML
 from django.template.loader import render_to_string
 from .models import Invoice, InvoiceItem
 from .serializers import InvoiceSerializer, InvoiceCreateSerializer
+
+# WeasyPrint requires GTK libraries - use only with Docker in production
+# from weasyprint import HTML
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -71,20 +73,12 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     def pdf(self, request, pk=None):
         invoice = self.get_object()
         
-        from apps.users.models import FreelancerProfile
-        freelancer_profile = FreelancerProfile.objects.filter(user=request.user).first()
-        
-        html_string = render_to_string('invoices/invoice.html', {
-            'invoice': invoice,
-            'freelancer': freelancer_profile,
-            'user': request.user,
+        # PDF generation requires WeasyPrint with GTK - use Docker for PDF generation
+        return Response({
+            'message': 'PDF not available in local development. Use Docker for PDF generation.',
+            'invoice_id': str(invoice.id),
+            'number': invoice.number,
         })
-        
-        pdf = HTML(string=html_string).write_pdf()
-        
-        response = HttpResponse(pdf, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="factura-{invoice.number}.pdf"'
-        return response
 
     @action(detail=True, methods=['post'])
     def mark_sent(self, request, pk=None):
