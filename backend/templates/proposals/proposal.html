@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Propuesta - {{ proposal.title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .logo { font-size: 24px; font-weight: bold; color: #6366F1; }
+        .title { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        .info { margin-bottom: 20px; }
+        .info p { margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f5f5f5; }
+        .total { font-size: 18px; font-weight: bold; text-align: right; margin-top: 20px; }
+        .notes { margin-top: 30px; padding: 15px; background-color: #f9f9f9; border-radius: 5px; }
+        .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">DevBill</div>
+        <div>
+            <p><strong>Propuesta #</strong> {{ proposal.id|stringslice:":8" }}</p>
+            <p><strong>Fecha:</strong> {{ proposal.created_at|date:"d/m/Y" }}</p>
+            <p><strong>Válida hasta:</strong> {{ proposal.valid_until|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+
+    <div class="title">Propuesta: {{ proposal.title }}</div>
+
+    <div class="info">
+        <p><strong>Cliente:</strong> {{ proposal.project.client.name }}</p>
+        {% if proposal.project.client.company %}
+        <p><strong>Empresa:</strong> {{ proposal.project.client.company }}</p>
+        {% endif %}
+        <p><strong>Proyecto:</strong> {{ proposal.project.name }}</p>
+    </div>
+
+    {% if proposal.description %}
+    <div class="notes">
+        <strong>Descripción:</strong>
+        <p>{{ proposal.description|linebreaks }}</p>
+    </div>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in proposal.items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.unit_price }}</td>
+                <td>${{ item.amount|default:item.quantity|add:item.unit_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        Total: ${{ proposal.total }}
+    </div>
+
+    {% if proposal.notes %}
+    <div class="notes">
+        <strong>Notas:</strong>
+        <p>{{ proposal.notes|linebreaks }}</p>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>Generado con DevBill - Freelancer CRM</p>
+    </div>
+</body>
+</html>

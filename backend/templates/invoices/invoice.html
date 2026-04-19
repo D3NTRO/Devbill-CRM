@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura {{ invoice.number }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .logo { font-size: 24px; font-weight: bold; color: #6366F1; }
+        .title { font-size: 20px; font-weight: bold; margin-bottom: 20px; }
+        .info { margin-bottom: 20px; }
+        .info p { margin: 5px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #f5f5f5; }
+        .totals { margin-top: 20px; text-align: right; }
+        .totals p { margin: 5px 0; }
+        .total-final { font-size: 18px; font-weight: bold; }
+        .notes { margin-top: 30px; padding: 15px; background-color: #f9f9f9; border-radius: 5px; }
+        .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
+        .status { padding: 5px 10px; border-radius: 3px; font-size: 12px; }
+        .status.paid { background-color: #d1fae5; color: #065f46; }
+        .status.sent { background-color: #dbeafe; color: #1e40af; }
+        .status.overdue { background-color: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">DevBill</div>
+        <div>
+            <p><strong>Factura #</strong> {{ invoice.number }}</p>
+            <p><strong>Fecha:</strong> {{ invoice.issue_date|date:"d/m/Y" }}</p>
+            <p><strong>Vence:</strong> {{ invoice.due_date|date:"d/m/Y" }}</p>
+            <p>
+                <span class="status {{ invoice.status|lower }}">
+                    {% if invoice.status == 'PAID' %}PAGADA
+                    {% elif invoice.status == 'SENT' %}ENVIADA
+                    {% elif invoice.status == 'OVERDUE' %}VENCIDA
+                    {% elif invoice.status == 'DRAFT' %}BORRADOR
+                    {% else %}{{ invoice.status }}{% endif %}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <div class="title">Factura</div>
+
+    <div class="info">
+        <p><strong>De:</strong> {% if freelancer %}{{ freelancer.user.get_full_name|default:freelancer.user.email }}{% else %}{{ user.email }}{% endif %}</p>
+        {% if freelancer and freelancer.address %}
+        <p>{{ freelancer.address|linebreaks }}</p>
+        {% endif %}
+        {% if freelancer and freelancer.tax_id %}
+        <p><strong>CUIT/RUT:</strong> {{ freelancer.tax_id }}</p>
+        {% endif %}
+        <hr>
+        <p><strong>Cliente:</strong> {{ invoice.client.name }}</p>
+        {% if invoice.client.company %}
+        <p><strong>Empresa:</strong> {{ invoice.client.company }}</p>
+        {% endif %}
+        {% if invoice.client.address %}
+        <p>{{ invoice.client.address|linebreaks }}</p>
+        {% endif %}
+        {% if invoice.client.tax_id %}
+        <p><strong>CUIT/RUT:</strong> {{ invoice.client.tax_id }}</p>
+        {% endif %}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in invoice.items.all %}
+            <tr>
+                <td>{{ item.description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.unit_price }}</td>
+                <td>${{ item.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <p>Subtotal: ${{ invoice.subtotal }}</p>
+        {% if invoice.tax_rate > 0 %}
+        <p>IVA ({{ invoice.tax_rate }}%): ${{ invoice.tax_amount }}</p>
+        {% endif %}
+        <p class="total-final">Total: ${{ invoice.total }}</p>
+    </div>
+
+    {% if invoice.notes %}
+    <div class="notes">
+        <strong>Notas:</strong>
+        <p>{{ invoice.notes|linebreaks }}</p>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>Generado con DevBill - Freelancer CRM</p>
+    </div>
+</body>
+</html>
