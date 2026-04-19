@@ -18,6 +18,11 @@
 | ClientDetail (perfil unificado) | ✅ | Denis | + feed actividad |
 | TimeEntry + timer | ✅ | Denis | start/stop/running endpoints |
 | TimerWidget global (Zustand) | ✅ | Denis | en TopBar siempre visible |
+| Proposal + PDF WeasyPrint | ✅ | Denis | /accept/ mueve a ACTIVE |
+| Búsqueda global /search/ | ✅ | Denis | icontains en Client/Project/Task |
+| Invoice + PDF | ✅ | Denis | auto-number, from-project |
+| Dashboard analytics | ✅ | Denis | stats + revenue chart + top clients |
+| AutoRule + Celery evaluator | ⏳ Pendiente | — | |
 | TimeEntry + timer | ⏳ Pendiente | — | Feature estrella |
 | TimerWidget global (Zustand) | ⏳ Pendiente | — | |
 | Proposal + PDF WeasyPrint | ⏳ Pendiente | — | |
@@ -40,12 +45,12 @@
 > Claude Code actualiza esta sección al final de cada sesión.
 
 ```
-SESIÓN 4 — ARRANCAR CON:
-1. Proposal model + WeasyPrint PDF
-2. Invoice model + PDF
-3. Búsqueda global /search/
-4. Dashboard analytics endpoints
-5. Commit y push
+SESIÓN 5 — ARRANCAR CON:
+1. Task CRUD + Celery reminder task
+2. GitHub Actions CI (lint + pytest)
+3. Deploy Railway
+4. Seed script demo
+5. README + GIFs
 ```
 
 ---
@@ -177,8 +182,47 @@ SESIÓN 4 — ARRANCAR CON:
 #### ➡️ PRÓXIMO PASO exacto para la siguiente sesión
 - Proposal model + PDF WeasyPrint
 - Invoice model + PDF
-- Búsqueda global /search/
-- Dashboard analytics
+
+---
+
+**Fecha:** 2026-04-19 06:30
+**Dev:** Denis
+**Sesión #:** 4
+**Duración:** 0.5h
+
+#### ✅ Completado en esta sesión
+- Proposal model (title, description, items JSON, total, valid_until, status)
+- ProposalSerializer con cálculo automático de total
+- ProposalViewSet con /pdf/, /mark_sent/, /accept/ (mueve proyecto a ACTIVE)
+- WeasyPrint template para propuesta PDF
+- Invoice model (number auto INV-2026-0001, tax_rate, subtotal, total)
+- InvoiceItem model (description, quantity, unit_price, amount, project FK)
+- InvoiceViewSet con /pdf/, /mark_sent/, /mark_paid/, /from-project/
+- WeasyPrint template para factura PDF
+- SearchView con búsqueda global icontains en Client/Project/Task/Proposal/Invoice
+- Dashboard endpoints: stats, revenue-chart, overdue-invoices, top-clients, pipeline-value, win-rate, avg-payment-days, billable-ratio
+- Frontend APIs: proposals, invoices, dashboard
+
+#### 🔄 Quedó a medias
+- Ninguno (Sprint 4 completo)
+
+#### 🐛 Bugs encontrados
+- Ninguno
+
+#### 📝 Decisiones técnicas tomadas
+- Invoice number auto-generado con prefix desde FreelancerProfile
+- mark_paid marca entradas de tiempo como invoiced
+- from-project crea factura desde time entries facturables
+
+#### ⚠️ Deuda técnica anotada
+- Falta Task + reminders Celery
+- Falta AutoRule + Celery evaluator
+
+#### ➡️ PRÓXIMO PASO exacto para la siguiente sesión
+- Task CRUD + Celery reminder
+- GitHub Actions CI
+- Deploy Railway
+- Seed script demo
 
 ---
 
