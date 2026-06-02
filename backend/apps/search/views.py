@@ -81,7 +81,7 @@ class SearchView(APIView):
                 'id': str(task.id),
                 'title': task.title,
                 'subtitle': f'{task.get_status_display()} - {task.get_priority_display()}',
-                'url': f'/tasks/{task.id}'
+                'url': '/tasks'
             })
         
         for proposal in proposals:
@@ -90,7 +90,7 @@ class SearchView(APIView):
                 'id': str(proposal.id),
                 'title': proposal.title,
                 'subtitle': f'{proposal.project.name} - {proposal.get_status_display()}',
-                'url': f'/proposals/{proposal.id}'
+                'url': '/proposals'
             })
         
         for invoice in invoices:
@@ -99,7 +99,7 @@ class SearchView(APIView):
                 'id': str(invoice.id),
                 'title': invoice.number,
                 'subtitle': f'{invoice.client.name} - {invoice.get_status_display()}',
-                'url': f'/invoices/{invoice.id}'
+                'url': '/invoices'
             })
         
         return Response({'results': results[:50]})
