@@ -15,8 +15,8 @@ db.sqlite3
 db.sqlite3-journal
 /staticfiles/
 /mediafiles/
-/node_modules/
-/dist/
+node_modules/
+dist/
 /build/
 *.egg-info/
 .idea/

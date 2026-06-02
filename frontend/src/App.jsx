@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, NavLink } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useEffect } from 'react'
 import Login from './pages/Login'
@@ -12,6 +12,7 @@ import { useAuthStore } from './store/authStore'
 import { useTimerStore } from './store/timerStore'
 import { projectsApi } from './api/projects'
 import { useState } from 'react'
+import { LayoutDashboard, Users, Kanban } from 'lucide-react'
 
 function ProtectedRoute({ children }) {
   const { token } = useAuthStore()
@@ -29,7 +30,7 @@ function AppLayout({ children }) {
     projectsApi.getAll().then(res => {
       setProjects(res.data.results || res.data)
     }).catch(() => {})
-  }, [])
+  }, [fetchRunning])
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,33 +52,25 @@ function AppLayout({ children }) {
       <div className="flex">
         <aside className="w-64 bg-white border-r border-gray-200 min-h-[calc(100vh-73px)] p-4">
           <nav className="space-y-1">
-            <a href="/" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
+            <NavLink to="/" end className={({ isActive }) => 
+              `flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-gray-100'}`
+            }>
+              <LayoutDashboard className="w-4 h-4" />
               Dashboard
-            </a>
-            <a href="/clients" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
+            </NavLink>
+            <NavLink to="/clients" className={({ isActive }) => 
+              `flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-gray-100'}`
+            }>
+              <Users className="w-4 h-4" />
               Clientes
-            </a>
-            <a href="/pipeline" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
+            </NavLink>
+            <NavLink to="/pipeline" className={({ isActive }) => 
+              `flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-gray-100'}`
+            }>
+              <Kanban className="w-4 h-4" />
               Pipeline
-            </a>
-            <a href="/projects" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Proyectos
-            </a>
-            <a href="/tasks" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Tareas
-            </a>
-            <a href="/time-tracker" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Tiempo
-            </a>
-            <a href="/proposals" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Propuestas
-            </a>
-            <a href="/invoices" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Facturas
-            </a>
-            <a href="/analytics" className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100">
-              Analytics
-            </a>
+            </NavLink>
+            {/* TODO: implementar páginas: /projects, /tasks, /time-tracker, /proposals, /invoices, /analytics */}
           </nav>
         </aside>
         <main className="flex-1">

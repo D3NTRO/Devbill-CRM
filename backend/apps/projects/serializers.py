@@ -23,6 +23,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def validate(self, data):
+        client = data.get('client')
+        if client and hasattr(self, 'initial_data'):
+            request = self.context.get('request')
+            if request and client.freelancer != request.user:
+                raise serializers.ValidationError({
+                    'client': 'Client does not belong to you'
+                })
         if data.get('billing_type') == 'HOURLY' and not data.get('hourly_rate'):
             raise serializers.ValidationError({
                 'hourly_rate': 'Required for hourly billing'

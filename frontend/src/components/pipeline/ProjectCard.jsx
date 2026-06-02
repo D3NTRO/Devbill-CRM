@@ -1,6 +1,5 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Link } from 'react-router-dom'
 import { Clock, DollarSign } from 'lucide-react'
 
 export default function ProjectCard({ project }) {

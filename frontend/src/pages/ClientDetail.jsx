@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { clientsApi } from '../api/clients'
 import { projectsApi } from '../api/projects'
@@ -18,11 +18,7 @@ export default function ClientDetail() {
   const [loading, setLoading] = useState(true)
   const [note, setNote] = useState('')
 
-  useEffect(() => {
-    fetchData()
-  }, [id])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [clientRes, summaryRes, activityRes, projectsRes] = await Promise.all([
         clientsApi.getOne(id),
@@ -33,13 +29,17 @@ export default function ClientDetail() {
       setClient(clientRes.data)
       setSummary(summaryRes.data)
       setActivity(activityRes.data)
-      setProjects(projectsRes.data.results?.filter(p => p.client === id) || [])
+      setProjects(projectsRes.data.results?.filter(p => (p.client?.toString() === id || p.client?.id === id)) || [])
     } catch (error) {
       toast.error('Error al cargar cliente')
     } finally {
       setLoading(false)
     }
-  }
+  }, [id])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const handleAddNote = async (e) => {
     e.preventDefault()
@@ -55,7 +55,30 @@ export default function ClientDetail() {
   }
 
   if (loading) {
-    return <div className="p-6 text-center">Cargando...</div>
+    return (
+      <div className="p-6">
+        <div className="skeleton h-5 w-32 mb-6 rounded" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="card">
+              <div className="skeleton h-8 w-48 mb-2" />
+              <div className="skeleton h-4 w-32 mb-4" />
+              <div className="skeleton h-10 w-full" />
+            </div>
+          </div>
+          <div className="space-y-6">
+            <div className="card">
+              <div className="skeleton h-5 w-20 mb-4" />
+              <div className="space-y-3">
+                <div className="skeleton h-4 w-full" />
+                <div className="skeleton h-4 w-3/4" />
+                <div className="skeleton h-4 w-1/2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!client) {
@@ -134,10 +157,9 @@ export default function ClientDetail() {
             ) : (
               <div className="space-y-3">
                 {projects.map((project) => (
-                  <Link
+                  <div
                     key={project.id}
-                    to={`/projects/${project.id}`}
-                    className="block p-3 rounded-lg border hover:bg-gray-50"
+                    className="block p-3 rounded-lg border"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -151,7 +173,7 @@ export default function ClientDetail() {
                         {project.pipeline_stage}
                       </span>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}

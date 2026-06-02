@@ -6,8 +6,8 @@ router = DefaultRouter()
 router.register('', ProjectViewSet, basename='project')
 
 urlpatterns = [
-    path('', include(router.urls)),
     path('pipeline/', PipelineViewSet.as_view({'get': 'list'}), name='pipeline'),
     path('pipeline/reorder/', PipelineViewSet.as_view({'post': 'reorder'}), name='pipeline-reorder'),
     path('pipeline/<uuid:pk>/move/', PipelineViewSet.as_view({'patch': 'move'}), name='pipeline-move'),
+    path('', include(router.urls)),
 ]

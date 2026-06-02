@@ -26,7 +26,7 @@ class Invoice(models.Model):
     )
     issue_date = models.DateField()
     due_date = models.DateField()
-    subtotal = models.DecimalField(max_digits=12, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     total = models.DecimalField(max_digits=12, decimal_places=2)
@@ -43,8 +43,11 @@ class Invoice(models.Model):
         return self.number
 
     def calculate_totals(self):
-        self.tax_amount = self.subtotal * (self.tax_rate / 100)
-        self.total = self.subtotal + self.tax_amount
+        from decimal import Decimal
+        subtotal = self.subtotal or Decimal('0')
+        rate = self.tax_rate / Decimal('100')
+        self.tax_amount = subtotal * rate
+        self.total = subtotal + self.tax_amount
 
     def save(self, *args, **kwargs):
         if not self.number:

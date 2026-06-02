@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from django.utils import timezone
 from .models import TimeEntry
 from .serializers import TimeEntrySerializer
@@ -85,8 +86,23 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         entry.stop()
         return Response(TimeEntrySerializer(entry).data)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='running')
     def running(self, request):
+        entry = TimeEntry.objects.filter(
+            freelancer=request.user,
+            ended_at__isnull=True
+        ).select_related('project', 'project__client').first()
+
+        if not entry:
+            return Response({'detail': 'No hay timer activo'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(TimeEntrySerializer(entry).data)
+
+
+class TimeEntryRunningView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
         entry = TimeEntry.objects.filter(
             freelancer=request.user,
             ended_at__isnull=True

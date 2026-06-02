@@ -1,13 +1,10 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import TimeEntryViewSet
-
-router = DefaultRouter()
-router.register('', TimeEntryViewSet, basename='time-entry')
+from django.urls import path
+from .views import TimeEntryViewSet, TimeEntryRunningView
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('start/', TimeEntryViewSet.as_view({'post': 'start'}), name='time-entry-start'),
-    path('stop/', TimeEntryViewSet.as_view({'post': 'stop'}), name='time-entry-stop'),
-    path('running/', TimeEntryViewSet.as_view({'get': 'running'}), name='time-entry-running'),
+    path('', TimeEntryViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('<uuid:pk>/', TimeEntryViewSet.as_view({'get': 'retrieve', 'patch': 'partial_update', 'delete': 'destroy'})),
+    path('running/', TimeEntryRunningView.as_view()),
+    path('start/', TimeEntryViewSet.as_view({'post': 'start'})),
+    path('stop/', TimeEntryViewSet.as_view({'post': 'stop'})),
 ]

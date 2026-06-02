@@ -13,7 +13,7 @@ class ProposalSerializer(serializers.ModelSerializer):
             'description', 'items', 'total', 'valid_until', 'status',
             'notes', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'total', 'created_at', 'updated_at']
 
     def create(self, validated_data):
         items = validated_data.get('items', [])

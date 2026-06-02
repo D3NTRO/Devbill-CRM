@@ -10,7 +10,6 @@ export default function TimerWidget({ projects = [] }) {
     elapsedSeconds, 
     startTimer, 
     stopTimer, 
-    fetchRunning,
     formatTime 
   } = useTimerStore()
   

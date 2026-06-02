@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { clientsApi, tagsApi } from '../api/clients'
-import { Plus, Search, Tag, Mail, Phone, Building } from 'lucide-react'
+import { clientsApi } from '../api/clients'
+import { Plus, Search, Mail, Phone, Building } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Clients() {
   const [clients, setClients] = useState([])
-  const [tags, setTags] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [search, setSearch] = useState('')
@@ -29,12 +28,10 @@ export default function Clients() {
 
   const fetchData = async () => {
     try {
-      const [clientsRes, tagsRes] = await Promise.all([
+      const [clientsRes] = await Promise.all([
         clientsApi.getAll(),
-        tagsApi.getAll(),
       ])
       setClients(clientsRes.data.results || clientsRes.data)
-      setTags(tagsRes.data.results || tagsRes.data)
     } catch (error) {
       toast.error('Error al cargar clientes')
     } finally {
@@ -65,7 +62,24 @@ export default function Clients() {
   )
 
   if (loading) {
-    return <div className="p-6 text-center">Cargando...</div>
+    return (
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="skeleton h-8 w-32" />
+          <div className="skeleton h-10 w-40 rounded-lg" />
+        </div>
+        <div className="skeleton h-10 w-full mb-6 rounded-lg" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="card">
+              <div className="skeleton h-5 w-32 mb-3" />
+              <div className="skeleton h-4 w-24 mb-2" />
+              <div className="skeleton h-4 w-40" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (

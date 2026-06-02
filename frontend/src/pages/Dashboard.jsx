@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '../store/authStore'
+import { dashboardApi } from '../api/dashboard'
 import { BarChart3, Users, FolderKanban, Clock, FileText, DollarSign } from 'lucide-react'
 
 export default function Dashboard() {
-  const { user, checkAuth } = useAuthStore()
+  const { checkAuth } = useAuthStore()
   const [stats, setStats] = useState(null)
 
   useEffect(() => {
     checkAuth()
-  }, [])
+    dashboardApi.getStats().then(res => {
+      setStats(res.data)
+    }).catch(() => {})
+  }, [checkAuth])
 
   const statCards = [
     { label: 'Clientes Activos', value: stats?.clients || 0, icon: Users, color: 'bg-blue-500' },
@@ -18,31 +22,33 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-indigo-600">DevBill</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-600">Hola, {user?.first_name || 'Usuario'}</span>
-          </div>
-        </div>
-      </header>
-
-      <main className="p-6">
+    <div className="p-6">
         <h2 className="text-xl font-semibold mb-6">Dashboard</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {statCards.map((stat, index) => (
-            <div key={index} className="card">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-gray-500 text-sm">{stat.label}</span>
-                <div className={`p-2 rounded-lg ${stat.color}`}>
-                  <stat.icon className="w-5 h-5 text-white" />
+          {!stats ? (
+            [1,2,3,4].map(i => (
+              <div key={i} className="card">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="skeleton h-4 w-24" />
+                  <div className="skeleton h-9 w-9 rounded-lg" />
                 </div>
+                <div className="skeleton h-8 w-20" />
               </div>
-              <p className="text-2xl font-bold">{stat.value}</p>
-            </div>
-          ))}
+            ))
+          ) : (
+            statCards.map((stat, index) => (
+              <div key={index} className="card">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-gray-500 text-sm">{stat.label}</span>
+                  <div className={`p-2 rounded-lg ${stat.color}`}>
+                    <stat.icon className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold">{stat.value}</p>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -61,7 +67,6 @@ export default function Dashboard() {
             <p className="text-gray-500 text-sm">No hay pendientes</p>
           </div>
         </div>
-      </main>
     </div>
   )
 }

@@ -34,12 +34,15 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user = authenticate(
-            email=serializer.validated_data['email'],
-            password=serializer.validated_data['password']
-        )
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
 
-        if user is None:
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        if user is None or not user.check_password(password):
             return Response(
                 {'detail': 'Credenciales inválidas'},
                 status=status.HTTP_401_UNAUTHORIZED
