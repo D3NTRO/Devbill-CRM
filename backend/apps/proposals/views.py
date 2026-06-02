@@ -16,7 +16,17 @@ class ProposalViewSet(viewsets.ModelViewSet):
     serializer_class = ProposalSerializer
 
     def get_queryset(self):
-        return Proposal.objects.filter(project__freelancer=self.request.user).select_related('project', 'project__client')
+        qs = Proposal.objects.filter(project__freelancer=self.request.user).select_related('project', 'project__client')
+
+        status = self.request.query_params.get('status')
+        if status:
+            qs = qs.filter(status=status.upper())
+
+        project = self.request.query_params.get('project')
+        if project:
+            qs = qs.filter(project_id=project)
+
+        return qs
 
     @action(detail=True, methods=['get'])
     def pdf(self, request, pk=None):

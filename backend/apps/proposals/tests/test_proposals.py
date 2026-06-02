@@ -7,11 +7,11 @@ from apps.proposals.models import Proposal
 pytestmark = pytest.mark.django_db
 
 @pytest.fixture
-def client(auth_client, user):
+def client(user):
     return Client.objects.create(name='Prop Client', email='prop@test.com', freelancer=user)
 
 @pytest.fixture
-def project(auth_client, user, client):
+def project(user, client):
     return Project.objects.create(
         name='Prop Project',
         client=client,
@@ -51,6 +51,25 @@ class TestProposalList:
         response = auth_client.get('/api/v1/proposals/')
         assert response.status_code == 200
         assert len(response.data['results']) == 1
+
+    def test_filter_by_status(self, auth_client, user, project):
+        Proposal.objects.create(project=project, title='Draft', status='DRAFT', items=[], total=100, valid_until='2026-07-01')
+        Proposal.objects.create(project=project, title='Sent', status='SENT', items=[], total=100, valid_until='2026-07-01')
+        response = auth_client.get('/api/v1/proposals/?status=DRAFT')
+        assert len(response.data['results']) == 1
+        assert response.data['results'][0]['title'] == 'Draft'
+
+    def test_filter_by_project(self, auth_client, user, project):
+        other = Project.objects.create(
+            name='Other', client=project.client, freelancer=user,
+            billing_type='FIXED', fixed_price='100',
+        )
+        Proposal.objects.create(project=project, title='Main', items=[], total=100, valid_until='2026-07-01')
+        Proposal.objects.create(project=other, title='Other Prop', items=[], total=100, valid_until='2026-07-01')
+        response = auth_client.get(f'/api/v1/proposals/?project={project.id}')
+        titles = [p['title'] for p in response.data['results']]
+        assert 'Main' in titles
+        assert 'Other Prop' not in titles
 
     def test_does_not_see_other_users_proposals(self, auth_client, user, project, other_user):
         other_client = Client.objects.create(name='Other Client', email='other@b.com', freelancer=other_user)
