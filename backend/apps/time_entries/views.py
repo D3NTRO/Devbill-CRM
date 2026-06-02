@@ -13,7 +13,34 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
     serializer_class = TimeEntrySerializer
 
     def get_queryset(self):
-        return TimeEntry.objects.filter(freelancer=self.request.user).select_related('project', 'project__client')
+        qs = TimeEntry.objects.filter(
+            freelancer=self.request.user
+        ).select_related('project', 'project__client')
+
+        project = self.request.query_params.get('project')
+        if project:
+            qs = qs.filter(project_id=project)
+
+        date_from = self.request.query_params.get('date_from')
+        if date_from:
+            qs = qs.filter(date__gte=date_from)
+
+        date_to = self.request.query_params.get('date_to')
+        if date_to:
+            qs = qs.filter(date__lte=date_to)
+
+        is_billable = self.request.query_params.get('is_billable')
+        if is_billable is not None:
+            qs = qs.filter(is_billable=is_billable.lower() == 'true')
+
+        running = self.request.query_params.get('running')
+        if running is not None:
+            if running.lower() == 'true':
+                qs = qs.filter(ended_at__isnull=True)
+            elif running.lower() == 'false':
+                qs = qs.filter(ended_at__isnull=False)
+
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(freelancer=self.request.user)
