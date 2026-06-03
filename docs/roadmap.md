@@ -63,7 +63,7 @@ Proyecto funcional. Todas las rutas frontend implementadas, 126 tests backend pa
 ### Calidad
 - [ ] Tests de integración frontend
 - [ ] E2E tests (Playwright/Cypress)
-- [ ] Dark mode
+- [ ] Dark mode — infraestructura lista (`darkMode: 'class'`, CSS vars `--bg`/`--surface`/`--text`/`--border`, `body` usa `var(--bg)`). Pendiente: migrar utility classes (`.card`, `.btn`, `.input`, bg-*, text-*, border-*) a CSS vars + agregar toggle persistido en localStorage + revisar 13 páginas con `dark:` variants.
 - [ ] i18n (opcional)
 - [ ] Optimización de bundles — JS >500 kB, agregar route-level code splitting con `React.lazy()`
 

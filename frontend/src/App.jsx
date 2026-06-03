@@ -15,6 +15,7 @@ import Proposals from './pages/Proposals'
 import Invoices from './pages/Invoices'
 import NotFound from './pages/NotFound'
 import TimerWidget from './components/timer/TimerWidget'
+import { LogoHorizontal } from './components/brand/Logo'
 import { useAuthStore } from './store/authStore'
 import { useTimerStore } from './store/timerStore'
 import { projectsApi } from './api/projects'
@@ -62,7 +63,7 @@ function AppLayout({ children }) {
             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden text-gray-500 hover:text-gray-700">
               {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
-            <h1 className="text-xl md:text-2xl font-bold text-indigo-600">DevBill</h1>
+            <LogoHorizontal size={28} />
           </div>
           <div className="flex items-center gap-3 md:gap-4">
             {(!isTimeTracker || isRunning) && <TimerWidget projects={projects} />}

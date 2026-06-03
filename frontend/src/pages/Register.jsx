@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/authStore'
+import { LogoHorizontal } from '../components/brand/Logo'
 import toast from 'react-hot-toast'
 
 export default function Register() {
@@ -32,9 +33,9 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-indigo-600">DevBill</h1>
-          <p className="text-gray-500 mt-2">Crea tu cuenta</p>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <LogoHorizontal size={40} showTagline className="mb-2" />
+          <p className="text-gray-500 text-sm">Crea tu cuenta</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
