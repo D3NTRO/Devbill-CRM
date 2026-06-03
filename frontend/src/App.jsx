@@ -1,27 +1,40 @@
 import { BrowserRouter, Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { useEffect, useState } from 'react'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Dashboard from './pages/Dashboard'
-import Clients from './pages/Clients'
-import ClientDetail from './pages/ClientDetail'
-import Pipeline from './pages/Pipeline'
-import Projects from './pages/Projects'
-import ProjectDetail from './pages/ProjectDetail'
-import Tasks from './pages/Tasks'
-import TimeTracker from './pages/TimeTracker'
-import Proposals from './pages/Proposals'
-import Invoices from './pages/Invoices'
-import NotFound from './pages/NotFound'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import TimerWidget from './components/timer/TimerWidget'
 import { LogoHorizontal } from './components/brand/Logo'
+import ThemeToggle from './components/ui/ThemeToggle'
 import { useAuthStore } from './store/authStore'
 import { useTimerStore } from './store/timerStore'
 import { projectsApi } from './api/projects'
 import {
   LayoutDashboard, Users, Kanban, FolderKanban, ListTodo, Clock, FileText, Receipt, Menu, X,
 } from 'lucide-react'
+
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Clients = lazy(() => import('./pages/Clients'))
+const ClientDetail = lazy(() => import('./pages/ClientDetail'))
+const Pipeline = lazy(() => import('./pages/Pipeline'))
+const Projects = lazy(() => import('./pages/Projects'))
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
+const Tasks = lazy(() => import('./pages/Tasks'))
+const TimeTracker = lazy(() => import('./pages/TimeTracker'))
+const Proposals = lazy(() => import('./pages/Proposals'))
+const Invoices = lazy(() => import('./pages/Invoices'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[50vh] p-6">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Cargando...</p>
+      </div>
+    </div>
+  )
+}
 
 function ProtectedRoute({ children }) {
   const { token } = useAuthStore()
@@ -54,38 +67,34 @@ function AppLayout({ children }) {
     { to: '/proposals', icon: FileText, label: 'Propuestas' },
     { to: '/invoices', icon: Receipt, label: 'Facturas' },
   ]
-  
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-4 md:px-6 py-4">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
+      <header className="px-4 md:px-6 py-4" style={{ backgroundColor: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden text-gray-500 hover:text-gray-700">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden" style={{ color: 'var(--text-secondary)' }}>
               {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             <LogoHorizontal size={28} />
           </div>
           <div className="flex items-center gap-3 md:gap-4">
             {(!isTimeTracker || isRunning) && <TimerWidget projects={projects} />}
-            <span className="text-sm md:text-base text-gray-600 hidden sm:inline">Hola, {user?.first_name || 'Usuario'}</span>
-            <button
-              onClick={logout}
-              className="text-gray-500 hover:text-gray-700 text-sm"
-            >
-              Salir
-            </button>
+            <span className="text-sm md:text-base hidden sm:inline" style={{ color: 'var(--text-secondary)' }}>Hola, {user?.first_name || 'Usuario'}</span>
+            <ThemeToggle />
+            <button onClick={logout} className="text-sm" style={{ color: 'var(--text-muted)' }}>Salir</button>
           </div>
         </div>
       </header>
       <div className="flex relative">
-        {/* Mobile overlay */}
         {sidebarOpen && <div className="fixed inset-0 bg-black/30 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
         <aside className={`
-          fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 
+          fixed lg:static inset-y-0 left-0 z-30 w-64
           min-h-[calc(100vh-73px)] p-4 transform transition-transform duration-200
+          border-r
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}>
+        `} style={{ backgroundColor: 'var(--surface)', borderColor: 'var(--border)' }}>
           <nav className="space-y-1 pt-14 lg:pt-0">
             {navItems.map(item => (
               <NavLink
@@ -94,8 +103,16 @@ function AppLayout({ children }) {
                 end={item.end}
                 onClick={() => setSidebarOpen(false)}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isActive ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-gray-100'}`
+                  `flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                    isActive
+                      ? 'font-medium'
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`
                 }
+                style={({ isActive }) => ({
+                  backgroundColor: isActive ? 'var(--primary)' : undefined,
+                  color: isActive ? '#fff' : 'var(--text)',
+                })}
               >
                 <item.icon className="w-4 h-4" />
                 {item.label}
@@ -104,7 +121,9 @@ function AppLayout({ children }) {
           </nav>
         </aside>
         <main className="flex-1 min-w-0">
-          {children}
+          <Suspense fallback={<PageLoader />}>
+            {children}
+          </Suspense>
         </main>
       </div>
     </div>
@@ -115,81 +134,63 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-right" />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Dashboard />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/clients" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Clients />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/clients/:id" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ClientDetail />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/pipeline" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Pipeline />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/projects" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Projects />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/projects/:id" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <ProjectDetail />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/tasks" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Tasks />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/time-tracker" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <TimeTracker />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/proposals" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Proposals />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/invoices" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <Invoices />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <AppLayout><Dashboard /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/clients" element={
+            <ProtectedRoute>
+              <AppLayout><Clients /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/clients/:id" element={
+            <ProtectedRoute>
+              <AppLayout><ClientDetail /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/pipeline" element={
+            <ProtectedRoute>
+              <AppLayout><Pipeline /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/projects" element={
+            <ProtectedRoute>
+              <AppLayout><Projects /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/projects/:id" element={
+            <ProtectedRoute>
+              <AppLayout><ProjectDetail /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/tasks" element={
+            <ProtectedRoute>
+              <AppLayout><Tasks /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/time-tracker" element={
+            <ProtectedRoute>
+              <AppLayout><TimeTracker /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/proposals" element={
+            <ProtectedRoute>
+              <AppLayout><Proposals /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/invoices" element={
+            <ProtectedRoute>
+              <AppLayout><Invoices /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
