@@ -138,7 +138,7 @@ export default function Tasks() {
         <div className="flex items-center gap-3">
           <ListTodo className="w-6 h-6 text-indigo-600" />
           <h2 className="text-xl font-semibold">Tareas</h2>
-          <span className="text-sm text-gray-500">({tasks.length})</span>
+          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({tasks.length})</span>
         </div>
         <button onClick={openCreate} className="btn btn-primary flex items-center gap-2">
           <Plus className="w-4 h-4" /> Nueva Tarea
@@ -146,7 +146,7 @@ export default function Tasks() {
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
         <input
           type="text"
           placeholder="Buscar tarea..."
@@ -158,8 +158,8 @@ export default function Tasks() {
 
       {filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <ListTodo className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">
+          <ListTodo className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)' }} className="mb-4">
             {tasks.length === 0 ? 'No hay tareas todavía' : 'No se encontraron tareas'}
           </p>
           {tasks.length === 0 && (
@@ -179,7 +179,7 @@ export default function Tasks() {
                   className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
                     task.status === 'DONE'
                       ? 'bg-green-500 border-green-500 text-white'
-                      : 'border-gray-300 hover:border-green-400'
+                      : 'border-gray-300 dark:border-gray-600 hover:border-green-400 dark:hover:border-green-400'
                   }`}
                   title={task.status === 'DONE' ? 'Reabrir' : 'Marcar hecha'}
                 >
@@ -191,11 +191,11 @@ export default function Tasks() {
                 </button>
 
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${task.status === 'DONE' ? 'line-through text-gray-400' : 'text-gray-900'}`}>
+                  <p className={`text-sm font-medium truncate ${task.status === 'DONE' ? 'line-through' : ''}`} style={{ color: 'var(--text)' }}>
                     {task.title}
                   </p>
                   {task.due_date && (
-                    <p className={`text-xs mt-0.5 ${isOverdue ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
+                    <p className={`text-xs mt-0.5 ${isOverdue ? 'text-red-500 dark:text-red-400 font-medium' : ''}`} style={{ color: isOverdue ? undefined : 'var(--text-muted)' }}>
                       {isOverdue ? '⚠ ' : ''}{dayjs(task.due_date).format('DD/MM/YYYY HH:mm')}
                     </p>
                   )}
@@ -216,10 +216,10 @@ export default function Tasks() {
                 </span>
 
                 <div className="flex items-center gap-1 ml-2">
-                  <button onClick={() => openEdit(task)} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded" title="Editar">
+                  <button onClick={() => openEdit(task)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-indigo-600 rounded" title="Editar">
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
-                  <button onClick={() => setDeleting(task)} className="p-1.5 text-gray-400 hover:text-red-600 rounded" title="Eliminar">
+                  <button onClick={() => setDeleting(task)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded" title="Eliminar">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -231,9 +231,9 @@ export default function Tasks() {
 
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <h3 className="text-lg font-semibold mb-2">Eliminar tarea</h3>
-            <p className="text-gray-600 mb-6">
+            <p style={{ color: 'var(--text-secondary)' }} className="mb-6">
               ¿Eliminar <strong>{deleting.title}</strong>?
             </p>
             <div className="flex justify-end gap-3">
@@ -246,16 +246,16 @@ export default function Tasks() {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => !submitting && setShowModal(false)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-md mx-4 p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-semibold">{editing ? 'Editar Tarea' : 'Nueva Tarea'}</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Título *</label>
                 <input
                   required
                   value={formData.title}
@@ -267,7 +267,7 @@ export default function Tasks() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Estado</label>
                   <select
                     value={formData.status}
                     onChange={e => setFormData({ ...formData, status: e.target.value })}
@@ -279,7 +279,7 @@ export default function Tasks() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Prioridad</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Prioridad</label>
                   <select
                     value={formData.priority}
                     onChange={e => setFormData({ ...formData, priority: e.target.value })}
@@ -292,7 +292,7 @@ export default function Tasks() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Fecha límite</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Fecha límite</label>
                 <input
                   type="datetime-local"
                   value={formData.due_date}

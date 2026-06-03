@@ -22,14 +22,14 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg)' }}>
+      <div className="max-w-md w-full p-8 rounded-2xl shadow-lg dark:shadow-2xl" style={{ backgroundColor: 'var(--surface)' }}>
         <div className="text-center mb-8 flex flex-col items-center">
           <LogoHorizontal size={40} showTagline className="mb-2" />
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Email</label>
             <input
               type="email"
               value={email}
@@ -39,7 +39,7 @@ export default function Login() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Password</label>
             <input
               type="password"
               value={password}
@@ -56,7 +56,7 @@ export default function Login() {
             {isLoading ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
-        <p className="text-center mt-6 text-gray-600">
+        <p className="text-center mt-6" style={{ color: 'var(--text-secondary)' }}>
           No tienes cuenta?{' '}
           <Link to="/register" className="text-indigo-600 hover:underline">
             Regístrate

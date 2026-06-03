@@ -16,6 +16,15 @@
   --text-muted: #9ca3af;
   --border: #e5e7eb;
   --border-light: #f3f4f6;
+  --skeleton: #e5e7eb;
+  --overlay: rgba(0, 0, 0, 0.4);
+  --header-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --table-hover: #f9fafb;
+  --chart-grid: #e5e7eb;
+  --chart-text: #9ca3af;
 }
 
 .dark {
@@ -27,6 +36,15 @@
   --text-muted: #64748b;
   --border: #334155;
   --border-light: #1e293b;
+  --skeleton: #334155;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --header-bg: #1e293b;
+  --sidebar-bg: #1e293b;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --table-hover: #1e293b;
+  --chart-grid: #334155;
+  --chart-text: #64748b;
 }
 
 * {
@@ -59,11 +77,18 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  background-color: var(--surface-hover);
+  color: var(--text);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border);
 }
 
 .btn-secondary:disabled {
-  @apply bg-gray-100 text-gray-400;
+  opacity: 0.5;
+  background-color: var(--surface-hover);
+  color: var(--text-muted);
 }
 
 .btn-danger {
@@ -71,7 +96,14 @@ body {
 }
 
 .input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow;
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text);
+  @apply w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
 }
 
 .card {
@@ -81,7 +113,8 @@ body {
 }
 
 .skeleton {
-  @apply bg-gray-200 rounded animate-pulse;
+  background-color: var(--skeleton);
+  @apply rounded animate-pulse;
 }
 
 @tailwind utilities;

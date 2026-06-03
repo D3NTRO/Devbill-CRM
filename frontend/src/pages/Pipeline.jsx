@@ -104,10 +104,10 @@ export default function Pipeline() {
         <div className="skeleton h-8 w-64 mb-6" />
         <div className="flex gap-4 overflow-x-auto pb-4">
           {STAGES.map(stage => (
-            <div key={stage.id} className="bg-gray-100 rounded-lg w-72 p-4 flex-shrink-0">
+            <div key={stage.id} className="bg-gray-100 dark:bg-gray-800 rounded-lg w-72 p-4 flex-shrink-0">
               <div className="skeleton h-5 w-24 mb-4" />
               {[1,2].map(i => (
-                <div key={i} className="bg-white rounded-lg p-3 mb-2 shadow-sm">
+                <div key={i} className="bg-white dark:bg-gray-700 rounded-lg p-3 mb-2 shadow-sm">
                   <div className="skeleton h-4 w-32 mb-2" />
                   <div className="skeleton h-3 w-20" />
                 </div>

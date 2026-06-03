@@ -233,7 +233,7 @@ export default function Invoices() {
         <div className="flex items-center gap-3">
           <Receipt className="w-6 h-6 text-indigo-600" />
           <h2 className="text-xl font-semibold">Facturas</h2>
-          <span className="text-sm text-gray-500">({invoices.length})</span>
+          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({invoices.length})</span>
         </div>
         <button onClick={openCreate} className="btn btn-primary flex items-center gap-2">
           <Plus className="w-4 h-4" /> Nueva Factura
@@ -244,26 +244,26 @@ export default function Invoices() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="card text-center">
           <p className="text-2xl font-bold">{formatCurrency(totals.total)}</p>
-          <p className="text-xs text-gray-500">Total facturado</p>
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Total facturado</p>
         </div>
-        <div className="card text-center border-blue-200">
-          <p className="text-2xl font-bold text-blue-600">{formatCurrency(totals.pending)}</p>
-          <p className="text-xs text-gray-500">Pendiente</p>
+        <div className="card text-center" style={{ border: '1px solid', borderColor: 'var(--border)' }}>
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totals.pending)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Pendiente</p>
         </div>
-        <div className="card text-center border-green-200">
-          <p className="text-2xl font-bold text-green-600">{formatCurrency(totals.paid)}</p>
-          <p className="text-xs text-gray-500">Pagado</p>
+        <div className="card text-center" style={{ border: '1px solid', borderColor: 'var(--border)' }}>
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totals.paid)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Pagado</p>
         </div>
-        <div className="card text-center border-red-200">
-          <p className="text-2xl font-bold text-red-600">{formatCurrency(totals.overdue)}</p>
-          <p className="text-xs text-gray-500">Vencido</p>
+        <div className="card text-center" style={{ border: '1px solid', borderColor: 'var(--border)' }}>
+          <p className="text-2xl font-bold text-red-600 dark:text-red-400">{formatCurrency(totals.overdue)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Vencido</p>
         </div>
       </div>
 
       {/* Search + Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
           <input
             type="text"
             placeholder="Buscar por número o cliente..."
@@ -285,8 +285,8 @@ export default function Invoices() {
       {/* Empty state */}
       {filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <Receipt className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">
+          <Receipt className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)' }} className="mb-4">
             {invoices.length === 0 ? 'No hay facturas todavía' : 'No se encontraron facturas'}
           </p>
           {invoices.length === 0 && (
@@ -297,7 +297,7 @@ export default function Invoices() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-500 border-b">
+              <tr className="text-left text-sm border-b" style={{ color: 'var(--text-muted)' }}>
                 <th className="pb-3 font-medium">Número</th>
                 <th className="pb-3 font-medium">Cliente</th>
                 <th className="pb-3 font-medium">Emisión</th>
@@ -312,11 +312,11 @@ export default function Invoices() {
                 const status = STATUSES.find(s => s.value === inv.status) || STATUSES[0]
                 const isOverdue = inv.status !== 'PAID' && inv.status !== 'CANCELLED' && inv.due_date && dayjs(inv.due_date).isBefore(dayjs())
                 return (
-                  <tr key={inv.id} className={`border-b border-gray-50 hover:bg-gray-50 ${isOverdue ? 'bg-red-50/30' : ''}`}>
-                    <td className="py-3 font-medium text-gray-900 tabular-nums">{inv.number}</td>
-                    <td className="py-3 text-sm text-gray-600">{inv.client_name || '—'}</td>
-                    <td className="py-3 text-sm text-gray-500">{inv.issue_date ? dayjs(inv.issue_date).format('DD/MM/YYYY') : '—'}</td>
-                    <td className="py-3 text-sm text-gray-500">
+                  <tr key={inv.id} className={`border-b hover:bg-gray-50 dark:hover:bg-gray-800/50 ${isOverdue ? 'bg-red-50/30 dark:bg-red-900/10' : ''}`} style={{ borderColor: 'var(--border)' }}>
+                    <td className="py-3 font-medium tabular-nums" style={{ color: 'var(--text)' }}>{inv.number}</td>
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{inv.client_name || '—'}</td>
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{inv.issue_date ? dayjs(inv.issue_date).format('DD/MM/YYYY') : '—'}</td>
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
                       {inv.due_date ? dayjs(inv.due_date).format('DD/MM/YYYY') : '—'}
                       {isOverdue && <span className="ml-1 text-red-500 text-xs">(vencida)</span>}
                     </td>
@@ -330,7 +330,7 @@ export default function Invoices() {
                       <div className="flex items-center justify-end gap-1">
                         {['DRAFT', 'OVERDUE'].includes(inv.status) && (
                           <>
-                            <button onClick={() => openEdit(inv)} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded" title="Editar">
+                            <button onClick={() => openEdit(inv)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-indigo-600 rounded" title="Editar">
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
                             <button onClick={() => handleMarkSent(inv.id)} className="p-1.5 text-blue-400 hover:text-blue-600 rounded" title="Marcar enviada">
@@ -344,7 +344,7 @@ export default function Invoices() {
                           </button>
                         )}
                         {inv.status !== 'PAID' && (
-                          <button onClick={() => setDeleting(inv)} className="p-1.5 text-gray-400 hover:text-red-600 rounded" title="Eliminar">
+                          <button onClick={() => setDeleting(inv)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded" title="Eliminar">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}
@@ -361,16 +361,16 @@ export default function Invoices() {
       {/* Create / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => !submitting && setShowModal(false)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold">{editing ? 'Editar Factura' : 'Nueva Factura'}</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cliente *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Cliente *</label>
                 <select
                   required
                   value={formData.client}
@@ -386,7 +386,7 @@ export default function Invoices() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Fecha emisión *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Fecha emisión *</label>
                   <input
                     type="date"
                     required
@@ -396,7 +396,7 @@ export default function Invoices() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Fecha vencimiento *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Fecha vencimiento *</label>
                   <input
                     type="date"
                     required
@@ -409,7 +409,7 @@ export default function Invoices() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">IVA (%)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">IVA (%)</label>
                   <input
                     type="number"
                     min="0"
@@ -422,7 +422,7 @@ export default function Invoices() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Notas</label>
                   <input
                     value={formData.notes}
                     onChange={e => setFormData({ ...formData, notes: e.target.value })}
@@ -435,7 +435,7 @@ export default function Invoices() {
               {/* Items */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium text-gray-700">Items</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Items</label>
                   <button type="button" onClick={handleAddItem} className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
                     <Plus className="w-3 h-3" /> Agregar item
                   </button>
@@ -443,7 +443,7 @@ export default function Invoices() {
                 <div className="border rounded-lg overflow-hidden">
                   <table className="w-full">
                     <thead>
-                      <tr className="text-left text-xs text-gray-500 bg-gray-50">
+                      <tr className="text-left text-xs border-b" style={{ color: 'var(--text-muted)', backgroundColor: 'var(--surface)' }}>
                         <th className="px-3 py-2 font-medium">Descripción</th>
                         <th className="px-3 py-2 font-medium w-20">Cant.</th>
                         <th className="px-3 py-2 font-medium w-28">Precio unit.</th>
@@ -453,7 +453,7 @@ export default function Invoices() {
                     </thead>
                     <tbody>
                       {formData.items.map((item, i) => (
-                        <tr key={i} className="border-t border-gray-100">
+                        <tr key={i} className="border-t" style={{ borderColor: 'var(--border)' }}>
                           <td className="px-3 py-1.5">
                             <input
                               value={item.description}
@@ -487,7 +487,7 @@ export default function Invoices() {
                           </td>
                           <td className="px-3 py-1.5 text-right">
                             {formData.items.length > 1 && (
-                              <button type="button" onClick={() => handleRemoveItem(i)} className="text-gray-300 hover:text-red-500">
+                              <button type="button" onClick={() => handleRemoveItem(i)} className="text-gray-300 dark:text-gray-600 hover:text-red-500">
                                 <X className="w-3.5 h-3.5" />
                               </button>
                             )}
@@ -496,17 +496,17 @@ export default function Invoices() {
                       ))}
                     </tbody>
                     <tfoot>
-                      <tr className="border-t border-gray-200 bg-gray-50">
-                        <td colSpan={3} className="px-3 py-2 text-sm text-right text-gray-600">Subtotal</td>
+                      <tr className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
+                        <td colSpan={3} className="px-3 py-2 text-sm text-right" style={{ color: 'var(--text-secondary)' }}>Subtotal</td>
                         <td className="px-3 py-2 text-sm font-medium text-right tabular-nums">{formatCurrency(formSubtotal)}</td>
                         <td></td>
                       </tr>
-                      <tr className="bg-gray-50">
-                        <td colSpan={3} className="px-3 py-1 text-sm text-right text-gray-600">IVA ({Number(formData.tax_rate) || 0}%)</td>
+                      <tr style={{ backgroundColor: 'var(--surface)' }}>
+                        <td colSpan={3} className="px-3 py-1 text-sm text-right" style={{ color: 'var(--text-secondary)' }}>IVA ({Number(formData.tax_rate) || 0}%)</td>
                         <td className="px-3 py-1 text-sm text-right tabular-nums">{formatCurrency(formTax)}</td>
                         <td></td>
                       </tr>
-                      <tr className="border-t border-gray-200 bg-gray-100">
+                      <tr className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
                         <td colSpan={3} className="px-3 py-2 text-sm font-bold text-right">Total</td>
                         <td className="px-3 py-2 text-sm font-bold text-right tabular-nums">{formatCurrency(formTotal)}</td>
                         <td></td>
@@ -531,9 +531,9 @@ export default function Invoices() {
       {/* Delete confirmation */}
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <h3 className="text-lg font-semibold mb-2">Eliminar factura</h3>
-            <p className="text-gray-600 mb-6">
+            <p style={{ color: 'var(--text-secondary)' }} className="mb-6">
               ¿Eliminar <strong>{deleting.number}</strong> ({formatCurrency(deleting.total)})?
             </p>
             <div className="flex justify-end gap-3">

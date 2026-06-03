@@ -46,11 +46,11 @@ export default function TimerWidget({ projects = [] }) {
   return (
     <div className="flex items-center gap-3">
       {isRunning && runningEntry ? (
-        <div className="flex items-center gap-3 bg-indigo-50 px-4 py-2 rounded-lg">
-          <Clock className="w-5 h-5 text-indigo-600" />
+        <div className="flex items-center gap-3 bg-indigo-50 dark:bg-indigo-900/30 px-4 py-2 rounded-lg">
+          <Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <div>
-            <p className="font-semibold text-indigo-600">{formatTime(elapsedSeconds)}</p>
-            <p className="text-xs text-indigo-500">{runningEntry.project?.name}</p>
+            <p className="font-semibold text-indigo-600 dark:text-indigo-400">{formatTime(elapsedSeconds)}</p>
+            <p className="text-xs text-indigo-500 dark:text-indigo-400">{runningEntry.project?.name}</p>
           </div>
           <button
             onClick={handleStop}

@@ -8,7 +8,8 @@ export default function PipelineColumn({ stage, projects }) {
   return (
     <div
       ref={setNodeRef}
-      className="flex-shrink-0 w-72 bg-gray-100 rounded-xl p-3"
+      className="flex-shrink-0 w-72 rounded-xl p-3"
+      style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -16,9 +17,9 @@ export default function PipelineColumn({ stage, projects }) {
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: stage.color }}
           />
-          <h3 className="font-semibold text-gray-700">{stage.label}</h3>
+          <h3 className="font-semibold" style={{ color: 'var(--text)' }}>{stage.label}</h3>
         </div>
-        <span className="text-sm text-gray-500 bg-white px-2 py-0.5 rounded-full">
+        <span className="text-sm px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--text-muted)' }}>
           {projects.length}
         </span>
       </div>

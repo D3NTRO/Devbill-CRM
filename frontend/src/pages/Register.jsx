@@ -31,16 +31,16 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full p-8 bg-white rounded-2xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg)' }}>
+      <div className="max-w-md w-full p-8 rounded-2xl shadow-lg dark:shadow-2xl" style={{ backgroundColor: 'var(--surface)' }}>
         <div className="text-center mb-8 flex flex-col items-center">
           <LogoHorizontal size={40} showTagline className="mb-2" />
-          <p className="text-gray-500 text-sm">Crea tu cuenta</p>
+          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Crea tu cuenta</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Nombre</label>
               <input
                 type="text"
                 value={formData.firstName}
@@ -50,7 +50,7 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Apellido</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Apellido</label>
               <input
                 type="text"
                 value={formData.lastName}
@@ -61,7 +61,7 @@ export default function Register() {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Email</label>
             <input
               type="email"
               value={formData.email}
@@ -71,7 +71,7 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Password</label>
             <input
               type="password"
               value={formData.password}
@@ -81,7 +81,7 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Confirmar Password</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>Confirmar Password</label>
             <input
               type="password"
               value={formData.confirmPassword}
@@ -94,7 +94,7 @@ export default function Register() {
             {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
-        <p className="text-center mt-6 text-gray-600">
+        <p className="text-center mt-6" style={{ color: 'var(--text-secondary)' }}>
           Ya tienes cuenta?{' '}
           <Link to="/login" className="text-indigo-600 hover:underline">
             Ingresa

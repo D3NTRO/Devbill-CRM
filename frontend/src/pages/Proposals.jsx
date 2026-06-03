@@ -206,7 +206,7 @@ export default function Proposals() {
         <div className="flex items-center gap-3">
           <FileText className="w-6 h-6 text-indigo-600" />
           <h2 className="text-xl font-semibold">Propuestas</h2>
-          <span className="text-sm text-gray-500">({proposals.length})</span>
+          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>({proposals.length})</span>
         </div>
         <button onClick={openCreate} className="btn btn-primary flex items-center gap-2">
           <Plus className="w-4 h-4" /> Nueva Propuesta
@@ -215,7 +215,7 @@ export default function Proposals() {
 
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
           <input
             type="text"
             placeholder="Buscar propuesta, proyecto o cliente..."
@@ -232,8 +232,8 @@ export default function Proposals() {
 
       {filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-4">
+          <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)' }} className="mb-4">
             {proposals.length === 0 ? 'No hay propuestas todavía' : 'No se encontraron propuestas'}
           </p>
           {proposals.length === 0 && (
@@ -244,7 +244,7 @@ export default function Proposals() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-500 border-b">
+              <tr className="text-left text-sm border-b" style={{ color: 'var(--text-muted)' }}>
                 <th className="pb-3 font-medium">Propuesta</th>
                 <th className="pb-3 font-medium">Proyecto</th>
                 <th className="pb-3 font-medium">Cliente</th>
@@ -259,12 +259,12 @@ export default function Proposals() {
                 const status = STATUSES.find(s => s.value === p.status) || STATUSES[0]
                 const isExpired = p.valid_until && dayjs(p.valid_until).isBefore(dayjs()) && p.status === 'DRAFT'
                 return (
-                  <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
-                    <td className="py-3 font-medium text-gray-900">{p.title}</td>
-                    <td className="py-3 text-sm text-gray-600">{p.project_name || '—'}</td>
-                    <td className="py-3 text-sm text-gray-600">{p.client_name || '—'}</td>
+                  <tr key={p.id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800/50" style={{ borderColor: 'var(--border)' }}>
+                    <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>{p.title}</td>
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{p.project_name || '—'}</td>
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{p.client_name || '—'}</td>
                     <td className="py-3 text-sm font-medium tabular-nums">{formatCurrency(p.total)}</td>
-                    <td className="py-3 text-sm text-gray-500">
+                    <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
                       {p.valid_until ? dayjs(p.valid_until).format('DD/MM/YYYY') : '—'}
                       {isExpired && <span className="ml-1 text-red-500 text-xs">(vence)</span>}
                     </td>
@@ -277,7 +277,7 @@ export default function Proposals() {
                       <div className="flex items-center justify-end gap-1">
                         {p.status === 'DRAFT' && (
                           <>
-                            <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded" title="Editar">
+                            <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-indigo-600 rounded" title="Editar">
                               <Pencil className="w-3.5 h-3.5" />
                             </button>
                             <button onClick={() => handleMarkSent(p.id)} className="p-1.5 text-blue-400 hover:text-blue-600 rounded" title="Marcar enviada">
@@ -293,7 +293,7 @@ export default function Proposals() {
                             <CheckCheck className="w-3.5 h-3.5" />
                           </button>
                         )}
-                        <button onClick={() => setDeleting(p)} className="p-1.5 text-gray-400 hover:text-red-600 rounded" title="Eliminar" disabled={p.status === 'ACCEPTED'}>
+                        <button onClick={() => setDeleting(p)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded" title="Eliminar" disabled={p.status === 'ACCEPTED'}>
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -309,16 +309,16 @@ export default function Proposals() {
       {/* Create / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => !submitting && setShowModal(false)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold">{editing ? 'Editar Propuesta' : 'Nueva Propuesta'}</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Proyecto *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Proyecto *</label>
                 <select
                   required
                   value={formData.project}
@@ -333,7 +333,7 @@ export default function Proposals() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Título *</label>
                 <input
                   required
                   value={formData.title}
@@ -344,7 +344,7 @@ export default function Proposals() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Descripción</label>
                 <textarea
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -356,7 +356,7 @@ export default function Proposals() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Válida hasta *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Válida hasta *</label>
                   <input
                     type="date"
                     required
@@ -366,7 +366,7 @@ export default function Proposals() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Notas</label>
                   <input
                     value={formData.notes}
                     onChange={e => setFormData({ ...formData, notes: e.target.value })}
@@ -379,7 +379,7 @@ export default function Proposals() {
               {/* Items */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium text-gray-700">Items</label>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Items</label>
                   <button type="button" onClick={handleAddItem} className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
                     <Plus className="w-3 h-3" /> Agregar item
                   </button>
@@ -387,7 +387,7 @@ export default function Proposals() {
                 <div className="border rounded-lg overflow-hidden">
                   <table className="w-full">
                     <thead>
-                      <tr className="text-left text-xs text-gray-500 bg-gray-50">
+                      <tr className="text-left text-xs border-b" style={{ color: 'var(--text-muted)', backgroundColor: 'var(--surface)' }}>
                         <th className="px-3 py-2 font-medium">Descripción</th>
                         <th className="px-3 py-2 font-medium w-20">Cant.</th>
                         <th className="px-3 py-2 font-medium w-28">Precio unit.</th>
@@ -397,7 +397,7 @@ export default function Proposals() {
                     </thead>
                     <tbody>
                       {formData.items.map((item, i) => (
-                        <tr key={i} className="border-t border-gray-100">
+                        <tr key={i} className="border-t" style={{ borderColor: 'var(--border)' }}>
                           <td className="px-3 py-1.5">
                             <input
                               value={item.description}
@@ -431,7 +431,7 @@ export default function Proposals() {
                           </td>
                           <td className="px-3 py-1.5 text-right">
                             {formData.items.length > 1 && (
-                              <button type="button" onClick={() => handleRemoveItem(i)} className="text-gray-300 hover:text-red-500">
+                              <button type="button" onClick={() => handleRemoveItem(i)} className="text-gray-300 dark:text-gray-600 hover:text-red-500">
                                 <X className="w-3.5 h-3.5" />
                               </button>
                             )}
@@ -440,8 +440,8 @@ export default function Proposals() {
                       ))}
                     </tbody>
                     <tfoot>
-                      <tr className="border-t border-gray-200 bg-gray-50">
-                        <td colSpan={3} className="px-3 py-2 text-sm font-medium text-right">Total</td>
+                      <tr className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--surface)' }}>
+                        <td colSpan={3} className="px-3 py-2 text-sm font-medium text-right" style={{ color: 'var(--text-secondary)' }}>Total</td>
                         <td className="px-3 py-2 text-sm font-bold text-right tabular-nums">
                           {formatCurrency(calcTotal(formData.items))}
                         </td>
@@ -467,9 +467,9 @@ export default function Proposals() {
       {/* Delete confirmation */}
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <h3 className="text-lg font-semibold mb-2">Eliminar propuesta</h3>
-            <p className="text-gray-600 mb-6">
+            <p style={{ color: 'var(--text-secondary)' }} className="mb-6">
               ¿Eliminar <strong>{deleting.title}</strong> ({formatCurrency(deleting.total)})?
             </p>
             <div className="flex justify-end gap-3">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { dashboardApi } from '../api/dashboard'
 import { Link } from 'react-router-dom'
+import { useThemeStore } from '../store/themeStore'
 import {
   Users, FolderKanban, Clock, DollarSign, Receipt, ListTodo,
   BarChart3, TrendingUp, Target, Calendar, AlertTriangle,
@@ -41,6 +42,8 @@ function StatCardSkeleton() {
 }
 
 export default function Dashboard() {
+  const { theme } = useThemeStore()
+  const isDark = theme === 'dark'
   const [data, setData] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -79,8 +82,8 @@ export default function Dashboard() {
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-3" />
-            <h3 className="text-lg font-medium text-gray-600 mb-1">Algo salió mal</h3>
-            <p className="text-sm text-gray-400 mb-4">{error}</p>
+            <h3 className="text-lg font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>Algo salió mal</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>{error}</p>
             <button onClick={loadAll} className="btn btn-primary inline-flex items-center gap-2">
               <RefreshCw className="w-4 h-4" />
               Reintentar
@@ -119,12 +122,12 @@ export default function Dashboard() {
                   <Link to={item.link} className="absolute inset-0 z-10" aria-label={item.label} />
                 ) : null}
                 <div className="flex items-center justify-between mb-3 relative z-0">
-                  <span className="text-gray-500 text-xs font-medium uppercase tracking-wide">{item.label}</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wide">{item.label}</span>
                   <div className={`p-2 rounded-lg ${item.color}`}>
                     <item.icon className="w-4 h-4 text-white" />
                   </div>
                 </div>
-                <p className="text-xl md:text-2xl font-bold text-gray-900">{val}</p>
+                <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">{val}</p>
               </div>
             )
           })
@@ -134,23 +137,23 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Revenue Chart */}
         <div className="lg:col-span-2 card">
-          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
+          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-100">
             <BarChart3 className="w-4 h-4 text-indigo-500" />
             Ingresos Mensuales
           </h3>
           {loading ? (
             <div className="skeleton h-64 w-full rounded" />
           ) : !revenue || revenue.length === 0 ? (
-            <div className="flex items-center justify-center h-64 text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500 text-sm">
               Sin datos de ingresos
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={revenue.map(r => ({ ...r, month: MONTHS[parseInt(r.month.split('-')[1]) - 1] || r.month }))}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="#9ca3af" />
-                <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'k'} />
-                <Tooltip formatter={(val) => [fmt(val), 'Ingresos']} />
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#f0f0f0'} />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke={isDark ? '#6B7280' : '#9ca3af'} />
+                <YAxis tick={{ fontSize: 12 }} stroke={isDark ? '#6B7280' : '#9ca3af'} tickFormatter={v => '$' + (v / 1000).toFixed(0) + 'k'} />
+                <Tooltip contentStyle={{ backgroundColor: isDark ? '#1f2937' : '#fff', border: isDark ? '1px solid #374151' : '1px solid #e5e7eb', color: isDark ? '#f3f4f6' : '#111827', borderRadius: '8px' }} formatter={(val) => [fmt(val), 'Ingresos']} />
                 <Bar dataKey="total" fill="#6366F1" radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>
             </ResponsiveContainer>
@@ -159,14 +162,14 @@ export default function Dashboard() {
 
         {/* Pipeline Value */}
         <div className="card">
-          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
+          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-100">
             <TrendingUp className="w-4 h-4 text-purple-500" />
             Pipeline
           </h3>
           {loading ? (
             <div className="skeleton h-64 w-full rounded" />
           ) : !pipeline || Object.values(pipeline).every(s => s.count === 0) ? (
-            <div className="flex items-center justify-center h-64 text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-64 text-gray-400 dark:text-gray-500 text-sm">
               Sin proyectos en pipeline
             </div>
           ) : (
@@ -179,10 +182,10 @@ export default function Dashboard() {
                 return (
                   <div key={stage}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">{s.label}</span>
-                      <span className="font-medium text-gray-800">{fmt(s.value)} ({s.count})</span>
+                      <span className="text-gray-600 dark:text-gray-300">{s.label}</span>
+                      <span className="font-medium text-gray-800 dark:text-gray-100">{fmt(s.value)} ({s.count})</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div className="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-2">
                       <div
                         className="h-2 rounded-full transition-all duration-500"
                         style={{ width: `${pct}%`, backgroundColor: PIPELINE_COLORS[stage] }}
@@ -199,14 +202,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Top Clients */}
         <div className="card">
-          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
+          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-100">
             <Star className="w-4 h-4 text-yellow-500" />
             Top Clientes
           </h3>
           {loading ? (
             <div className="skeleton h-48 w-full rounded" />
           ) : !topClients || topClients.length === 0 ? (
-            <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500 text-sm">
               Sin clientes con facturación
             </div>
           ) : (
@@ -216,10 +219,10 @@ export default function Dashboard() {
                 return (
                   <Link key={c.id} to={`/clients/${c.id}`} className="block group">
                     <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-gray-700 group-hover:text-indigo-600 transition-colors truncate">{c.name}</span>
-                      <span className="font-medium text-gray-800 ml-2 flex-shrink-0">{fmt(c.total)}</span>
+                      <span className="text-gray-700 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">{c.name}</span>
+                      <span className="font-medium text-gray-800 dark:text-gray-100 ml-2 flex-shrink-0">{fmt(c.total)}</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-1.5">
+                    <div className="w-full bg-gray-100 dark:bg-gray-600 rounded-full h-1.5">
                       <div
                         className="h-1.5 rounded-full bg-yellow-400 transition-all"
                         style={{ width: `${pct}%` }}
@@ -234,14 +237,14 @@ export default function Dashboard() {
 
         {/* Overdue Invoices */}
         <div className="card">
-          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
-            <AlertTriangle className="w-4 h-4 text-red-500" />
+          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-100">
+            <AlertTriangle className="w-4 h-4 text-red-500 dark:text-red-400" />
             Facturas Vencidas
           </h3>
           {loading ? (
             <div className="skeleton h-48 w-full rounded" />
           ) : !overdue || overdue.length === 0 ? (
-            <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
+            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500 text-sm">
               <div className="text-center">
                 <CheckCircle2 className="w-8 h-8 text-green-400 mx-auto mb-2" />
                 No hay facturas vencidas
@@ -251,14 +254,14 @@ export default function Dashboard() {
             <div className="space-y-2">
               {overdue.slice(0, 5).map(inv => (
                 <div key={inv.id} className="block cursor-default">
-                  <div className="flex items-center justify-between p-2 rounded-lg hover:bg-red-50 transition-colors">
+                  <div className="flex items-center justify-between p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-800 truncate">{inv.number}</p>
-                      <p className="text-xs text-gray-400">{inv.client}</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{inv.number}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">{inv.client}</p>
                     </div>
                     <div className="text-right flex-shrink-0 ml-2">
-                      <p className="text-sm font-semibold text-red-600">{fmt(inv.total)}</p>
-                      <p className="text-xs text-red-500">{inv.days_overdue}d vencido</p>
+                      <p className="text-sm font-semibold text-red-600 dark:text-red-400">{fmt(inv.total)}</p>
+                      <p className="text-xs text-red-500 dark:text-red-400">{inv.days_overdue}d vencido</p>
                     </div>
                   </div>
                 </div>
@@ -269,7 +272,7 @@ export default function Dashboard() {
 
         {/* KPIs */}
         <div className="card">
-          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800">
+          <h3 className="font-semibold mb-4 flex items-center gap-2 text-gray-800 dark:text-gray-100">
             <Target className="w-4 h-4 text-green-500" />
             Indicadores
           </h3>
@@ -280,14 +283,14 @@ export default function Dashboard() {
           ) : (
             <div className="space-y-4">
               {/* Win Rate */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-indigo-100 rounded-lg">
-                    <TrendingUp className="w-4 h-4 text-indigo-600" />
+                  <div className="p-1.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                    <TrendingUp className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Win Rate</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Win Rate</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
                       {winRate ? `${winRate.rate}% (${winRate.accepted}/${winRate.total})` : '—'}
                     </p>
                   </div>
@@ -295,14 +298,14 @@ export default function Dashboard() {
               </div>
 
               {/* Avg Payment Days */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-blue-100 rounded-lg">
-                    <Calendar className="w-4 h-4 text-blue-600" />
+                  <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Pago Promedio</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Pago Promedio</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
                       {avgDays ? `${avgDays.average_days} días` : '—'}
                     </p>
                   </div>
@@ -310,14 +313,14 @@ export default function Dashboard() {
               </div>
 
               {/* Billable Ratio */}
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-green-100 rounded-lg">
-                    <Timer className="w-4 h-4 text-green-600" />
+                  <div className="p-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                    <Timer className="w-4 h-4 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Horas Facturables</p>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Horas Facturables</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
                       {billableRatio ? `${billableRatio.ratio}% (${fmtHours(billableRatio.billable_hours)}/${fmtHours(billableRatio.total_hours)}h)` : '—'}
                     </p>
                   </div>

@@ -192,7 +192,7 @@ export default function Projects() {
 
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
           <input
             type="text"
             placeholder="Buscar proyecto o cliente..."
@@ -214,8 +214,8 @@ export default function Projects() {
 
       {filteredProjects.length === 0 ? (
         <div className="card text-center py-12">
-          <FolderKanban className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-2">{projects.length === 0 ? 'No hay proyectos todavía' : 'No se encontraron proyectos'}</p>
+          <FolderKanban className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)' }} className="mb-2">{projects.length === 0 ? 'No hay proyectos todavía' : 'No se encontraron proyectos'}</p>
           {projects.length === 0 && (
             <button onClick={openCreate} className="btn btn-primary">Crear primer proyecto</button>
           )}
@@ -224,7 +224,7 @@ export default function Projects() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-left text-sm text-gray-500 border-b">
+              <tr className="text-left text-sm border-b" style={{ color: 'var(--text-muted)' }}>
                 <th className="pb-3 font-medium">Proyecto</th>
                 <th className="pb-3 font-medium">Cliente</th>
                 <th className="pb-3 font-medium">Etapa</th>
@@ -237,30 +237,30 @@ export default function Projects() {
             </thead>
             <tbody>
               {filteredProjects.map(p => (
-                <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr key={p.id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800/50" style={{ borderColor: 'var(--border)' }}>
                   <td className="py-3">
-                    <Link to={`/projects/${p.id}`} className="font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                    <Link to={`/projects/${p.id}`} className="font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center gap-1">
                       {p.name} <ExternalLink className="w-3 h-3" />
                     </Link>
                   </td>
-                  <td className="py-3 text-gray-600">{p.client_name || '—'}</td>
+                  <td className="py-3" style={{ color: 'var(--text-secondary)' }}>{p.client_name || '—'}</td>
                   <td className="py-3">
                     <span className="px-2 py-0.5 text-xs rounded-full" style={{ backgroundColor: p.color + '20', color: p.color }}>
                       {p.pipeline_stage}
                     </span>
                   </td>
-                  <td className="py-3 text-sm text-gray-600">{p.billing_type === 'HOURLY' ? 'Por hora' : 'Fijo'}</td>
-                  <td className="py-3 text-sm text-gray-600">{p.total_hours || 0}h</td>
+                  <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{p.billing_type === 'HOURLY' ? 'Por hora' : 'Fijo'}</td>
+                  <td className="py-3 text-sm" style={{ color: 'var(--text-secondary)' }}>{p.total_hours || 0}h</td>
                   <td className="py-3 text-sm font-medium">{formatCurrency(p.billing_type === 'FIXED' ? p.fixed_price : p.total_invoiced)}</td>
                   <td className="py-3">
                     <span className={`px-2 py-0.5 text-xs rounded-full ${statusBadge(p.status)}`}>{p.status}</span>
                   </td>
                   <td className="py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 hover:text-indigo-600 rounded" title="Editar">
+                      <button onClick={() => openEdit(p)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-indigo-600 rounded" title="Editar">
                         <Pencil className="w-4 h-4" />
                       </button>
-                      <button onClick={() => setDeleting(p)} className="p-1.5 text-gray-400 hover:text-red-600 rounded" title="Eliminar">
+                      <button onClick={() => setDeleting(p)} className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 rounded" title="Eliminar">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -275,17 +275,17 @@ export default function Projects() {
       {/* Create / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => !submitting && setShowModal(false)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold">{editing ? 'Editar Proyecto' : 'Nuevo Proyecto'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setShowModal(false)} style={{ color: 'var(--text-muted)' }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cliente *</label>
+                <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>Cliente *</label>
                 <select
                   required
                   value={formData.client}
@@ -300,7 +300,7 @@ export default function Projects() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nombre *</label>
                 <input
                   required
                   value={formData.name}
@@ -311,7 +311,7 @@ export default function Projects() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Descripción</label>
                 <textarea
                   value={formData.description}
                   onChange={e => setField('description', e.target.value)}
@@ -323,7 +323,7 @@ export default function Projects() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de facturación</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Tipo de facturación</label>
                   <select
                     value={formData.billing_type}
                     onChange={e => setField('billing_type', e.target.value)}
@@ -336,7 +336,7 @@ export default function Projects() {
                 <div>
                   {formData.billing_type === 'HOURLY' ? (
                     <>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Tarifa por hora *</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Tarifa por hora *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -348,7 +348,7 @@ export default function Projects() {
                     </>
                   ) : (
                     <>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Precio fijo *</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Precio fijo *</label>
                       <input
                         type="number"
                         step="0.01"
@@ -364,7 +364,7 @@ export default function Projects() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Horas estimadas</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Horas estimadas</label>
                   <input
                     type="number"
                     step="0.5"
@@ -375,7 +375,7 @@ export default function Projects() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Valor estimado</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Valor estimado</label>
                   <input
                     type="number"
                     step="0.01"
@@ -389,7 +389,7 @@ export default function Projects() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Etapa pipeline</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Etapa pipeline</label>
                   <select value={formData.pipeline_stage} onChange={e => setField('pipeline_stage', e.target.value)} className="input">
                     {PIPELINE_STAGES.filter(s => s.value).map(s => (
                       <option key={s.value} value={s.value}>{s.label}</option>
@@ -397,7 +397,7 @@ export default function Projects() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Estado</label>
                   <select value={formData.status} onChange={e => setField('status', e.target.value)} className="input">
                     {STATUSES.filter(s => s.value).map(s => (
                       <option key={s.value} value={s.value}>{s.label}</option>
@@ -408,7 +408,7 @@ export default function Projects() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Fecha inicio</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Fecha inicio</label>
                   <input
                     type="date"
                     value={formData.start_date}
@@ -417,7 +417,7 @@ export default function Projects() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Fecha límite</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Fecha límite</label>
                   <input
                     type="date"
                     value={formData.deadline}
@@ -428,7 +428,7 @@ export default function Projects() {
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">Color:</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Color:</label>
                 <input
                   type="color"
                   value={formData.color}
@@ -451,9 +451,9 @@ export default function Projects() {
       {/* Delete confirmation */}
       {deleting && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setDeleting(null)}>
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
+          <div className="rounded-xl shadow-xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()} style={{ backgroundColor: 'var(--surface)' }}>
             <h3 className="text-lg font-semibold mb-2">Eliminar proyecto</h3>
-            <p className="text-gray-600 mb-6">¿Eliminar <strong>{deleting.name}</strong>? Esta acción no se puede deshacer.</p>
+            <p style={{ color: 'var(--text-secondary)' }} className="mb-6">¿Eliminar <strong>{deleting.name}</strong>? Esta acción no se puede deshacer.</p>
             <div className="flex justify-end gap-3">
               <button onClick={() => setDeleting(null)} className="btn btn-secondary">Cancelar</button>
               <button onClick={() => handleDelete(deleting.id)} className="btn btn-danger">Eliminar</button>
@@ -467,10 +467,10 @@ export default function Projects() {
 
 function statusBadge(status) {
   switch (status) {
-    case 'ACTIVE': return 'bg-green-100 text-green-700'
-    case 'PAUSED': return 'bg-yellow-100 text-yellow-700'
-    case 'COMPLETED': return 'bg-blue-100 text-blue-700'
-    case 'CANCELLED': return 'bg-red-100 text-red-700'
-    default: return 'bg-gray-100 text-gray-600'
+    case 'ACTIVE': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+    case 'PAUSED': return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+    case 'COMPLETED': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+    case 'CANCELLED': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+    default: return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
   }
 }

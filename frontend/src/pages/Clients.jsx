@@ -95,7 +95,7 @@ export default function Clients() {
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
         <input
           type="text"
           placeholder="Buscar clientes..."
@@ -107,8 +107,8 @@ export default function Clients() {
 
       {filteredClients.length === 0 ? (
         <div className="card text-center py-12">
-          <Building className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">No hay clientes aún</p>
+          <Building className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--text-muted)' }} />
+          <p style={{ color: 'var(--text-secondary)' }}>No hay clientes aún</p>
           <button
             onClick={() => setShowModal(true)}
             className="text-indigo-600 hover:underline mt-2"
@@ -128,17 +128,17 @@ export default function Clients() {
                 <div>
                   <h3 className="font-semibold text-lg">{client.name}</h3>
                   {client.company && (
-                    <p className="text-gray-500 text-sm">{client.company}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">{client.company}</p>
                   )}
                 </div>
                 <span className={`px-2 py-1 text-xs rounded-full ${
-                  client.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                  client.is_active ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300'
                 }`}>
                   {client.is_active ? 'Activo' : 'Inactivo'}
                 </span>
               </div>
 
-              <div className="space-y-2 text-sm text-gray-600">
+              <div className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 {client.email && (
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
@@ -173,7 +173,7 @@ export default function Clients() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <div className="rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" style={{ backgroundColor: 'var(--surface)' }}>
             <h2 className="text-xl font-bold mb-4">Nuevo Cliente</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

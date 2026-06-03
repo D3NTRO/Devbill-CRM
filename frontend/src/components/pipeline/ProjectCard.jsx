@@ -16,6 +16,8 @@ export default function ProjectCard({ project }) {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    backgroundColor: 'var(--surface)',
+    borderColor: 'var(--border)',
   }
 
   return (
@@ -24,10 +26,10 @@ export default function ProjectCard({ project }) {
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white rounded-lg p-3 shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing"
+      className="rounded-lg p-3 shadow-sm border cursor-grab active:cursor-grabbing"
     >
       <div className="flex items-start justify-between mb-2">
-        <h4 className="font-medium text-sm text-gray-900 line-clamp-2">
+        <h4 className="font-medium text-sm line-clamp-2" style={{ color: 'var(--text)' }}>
           {project.name}
         </h4>
         <div
@@ -37,10 +39,10 @@ export default function ProjectCard({ project }) {
       </div>
 
       {project.client_name && (
-        <p className="text-xs text-gray-500 mb-2">{project.client_name}</p>
+        <p className="text-xs mb-2" style={{ color: 'var(--text-secondary)' }}>{project.client_name}</p>
       )}
 
-      <div className="flex items-center justify-between text-xs text-gray-400">
+      <div className="flex items-center justify-between text-xs" style={{ color: 'var(--text-muted)' }}>
         <div className="flex items-center gap-1">
           <Clock className="w-3 h-3" />
           <span>{project.total_hours || 0}h</span>
