@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 :root {
   --primary: #6366F1;
@@ -61,3 +60,5 @@ body {
 .skeleton {
   @apply bg-gray-200 rounded animate-pulse;
 }
+
+@tailwind utilities;
