@@ -111,12 +111,15 @@ class TestTimerRunning:
         response = auth_client.get('/api/v1/time-entries/running/')
 
         assert response.status_code == 200
-        assert response.data['ended_at'] is None
+        assert response.data['running'] is True
+        assert response.data['entry']['ended_at'] is None
 
-    def test_get_running_timer_when_none_returns_404(self, auth_client):
+    def test_get_running_timer_when_none_returns_200_with_running_false(self, auth_client):
         response = auth_client.get('/api/v1/time-entries/running/')
 
-        assert response.status_code == 404
+        assert response.status_code == 200
+        assert response.data['running'] is False
+        assert response.data['entry'] is None
 
     def test_running_timer_scoped_to_user(self, auth_client, user, project, other_user, other_project):
         TimeEntry.objects.create(
@@ -125,7 +128,8 @@ class TestTimerRunning:
         )
 
         response = auth_client.get('/api/v1/time-entries/running/')
-        assert response.status_code == 404
+        assert response.status_code == 200
+        assert response.data['running'] is False
 
 
 # ─── Manual Entry CRUD ─────────────────────────────────────────

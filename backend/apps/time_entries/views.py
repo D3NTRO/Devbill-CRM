@@ -121,9 +121,9 @@ class TimeEntryViewSet(viewsets.ModelViewSet):
         ).select_related('project', 'project__client').first()
 
         if not entry:
-            return Response({'detail': 'No hay timer activo'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'running': False, 'entry': None})
 
-        return Response(TimeEntrySerializer(entry).data)
+        return Response({'running': True, 'entry': TimeEntrySerializer(entry).data})
 
 
 class TimeEntryRunningView(APIView):
@@ -136,6 +136,6 @@ class TimeEntryRunningView(APIView):
         ).select_related('project', 'project__client').first()
 
         if not entry:
-            return Response({'detail': 'No hay timer activo'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'running': False, 'entry': None})
 
-        return Response(TimeEntrySerializer(entry).data)
+        return Response({'running': True, 'entry': TimeEntrySerializer(entry).data})

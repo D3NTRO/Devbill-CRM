@@ -29,7 +29,7 @@ const emptyForm = { project: '', description: '', started_at: '', ended_at: '', 
 export default function TimeTracker() {
   const {
     runningEntry, isRunning, elapsedSeconds,
-    startTimer, stopTimer, fetchRunning,
+    startTimer, stopTimer,
   } = useTimerStore()
 
   const [entries, setEntries] = useState([])
@@ -65,7 +65,6 @@ export default function TimeTracker() {
   }, [])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => { fetchRunning() }, [fetchRunning])
 
   const handleStart = async () => {
     if (!selectedProject) { toast.error('Selecciona un proyecto'); return }

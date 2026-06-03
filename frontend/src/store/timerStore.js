@@ -48,21 +48,29 @@ export const useTimerStore = create((set, get) => ({
   fetchRunning: async () => {
     try {
       const response = await timeEntriesApi.getRunning()
-      const entry = response.data
-      const startTime = new Date(entry.started_at).getTime()
-      const elapsed = Math.floor((Date.now() - startTime) / 1000)
-      
-      set({ 
-        runningEntry: entry, 
-        isRunning: true,
-        elapsedSeconds: elapsed 
-      })
-      get().startInterval()
+      const data = response.data
+      if (data.running && data.entry) {
+        const startTime = new Date(data.entry.started_at).getTime()
+        const elapsed = Math.floor((Date.now() - startTime) / 1000)
+        set({
+          runningEntry: data.entry,
+          isRunning: true,
+          elapsedSeconds: elapsed,
+        })
+        get().startInterval()
+      } else {
+        set({
+          runningEntry: null,
+          isRunning: false,
+          elapsedSeconds: 0,
+        })
+        get().stopInterval()
+      }
     } catch (error) {
-      set({ 
-        runningEntry: null, 
+      set({
+        runningEntry: null,
         isRunning: false,
-        elapsedSeconds: 0 
+        elapsedSeconds: 0,
       })
     }
   },

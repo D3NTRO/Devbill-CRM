@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, NavLink } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import Login from './pages/Login'
@@ -30,9 +30,11 @@ function ProtectedRoute({ children }) {
 
 function AppLayout({ children }) {
   const { user, logout } = useAuthStore()
-  const { fetchRunning } = useTimerStore()
+  const { fetchRunning, isRunning } = useTimerStore()
   const [projects, setProjects] = useState([])
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+  const isTimeTracker = location.pathname === '/time-tracker'
 
   useEffect(() => {
     fetchRunning()
@@ -63,7 +65,7 @@ function AppLayout({ children }) {
             <h1 className="text-xl md:text-2xl font-bold text-indigo-600">DevBill</h1>
           </div>
           <div className="flex items-center gap-3 md:gap-4">
-            <TimerWidget projects={projects} />
+            {(!isTimeTracker || isRunning) && <TimerWidget projects={projects} />}
             <span className="text-sm md:text-base text-gray-600 hidden sm:inline">Hola, {user?.first_name || 'Usuario'}</span>
             <button
               onClick={logout}
